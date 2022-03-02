@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "pretty": true,
+    "target": "es6",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "moduleResolution": "Node",
+    "strict": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    // "incremental": true,
+    "declaration": true,
+    "declarationDir": "dist",
+    // "noEmit": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true
+  },
+  "include": ["./src"]
+}

@@ -1,0 +1,398 @@
+{
+  "blocks": [
+    {
+      "id": "block-1",
+      "type": "text",
+      "text": [
+        {
+          "insert": "this 👌 is 😯 test text"
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "box": true,
+            "id": "box-1",
+            "type": "text",
+            "text": "this is a text box"
+          }
+        },
+        {
+          "insert": "this is some text with white spaces      . space is ended here."
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "box": true,
+            "id": "box-11",
+            "type": "br"
+          }
+        },
+        {
+          "insert": "this is some text with white spaces      . space is ended here."
+        }
+      ]
+    },
+    {
+      "id": "block-2",
+      "type": "text",
+      "text": [
+        {
+          "insert": "    测试中文文字👌   😯。"
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "box": true,
+            "id": "box-2",
+            "type": "text",
+            "text": "这是一个文字盒子"
+          }
+        },
+        {
+          "insert": "这段文字有比较多的空格      。中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字。"
+        }
+      ]
+    },
+    {
+      "id": "block-3",
+      "type": "embed",
+      "embedType": "image",
+      "embedData": {}
+    },
+    {
+      "id": "block-4",
+      "type": "text",
+      "text": [
+        {
+          "insert": "this 👌 is 😯 test text without space. "
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "box": true,
+            "id": "box-3",
+            "type": "text",
+            "text": "this is a text box"
+          }
+        },
+        {
+          "insert": "1111asdsdsdklfsdajfkladsjflkdsjafklsdajfklsadjfksadljfklsadfjskdlafjaskldfjsadklfjsadklfjdslakfjdsaklfjadslkfjasdklfjsdaklj"
+        }
+      ]
+    },
+    {
+      "id": "K7HKGVVo",
+      "type": "table",
+      "children": [
+        "_SxQeAUz6",
+        "_LVuLwBds",
+        "_iaF6BUsZ",
+        "_LzNhRr7w",
+        "_9b0iNgKe",
+        "_pa0KyZKu",
+        "_8_5V1qR4",
+        "_Gpfx1hC3",
+        "_HyHHwnBh",
+        "_dV6P_v10",
+        "_Ts6FF4MB",
+        "_BfuOeHER",
+        "_GQ9htQeo",
+        "_9KgRpHLZ",
+        "_ukvMi6YT",
+        "_S3FkK1Z4",
+        "_l5GgqDQV",
+        "_4EFYr9aY",
+        "_Ch3mq0MY",
+        "_7FHZOYU8",
+        "_fiJRvs0s",
+        "_0YLIF0ix",
+        "_xEOQ4kk2",
+        "_jpVfg_XC"
+      ],
+      "rows": 4,
+      "cols": 6
+    },
+    {
+      "id": "block-6",
+      "type": "text",
+      "text": [
+        {
+          "insert": "    测试中文文字👌   😯。"
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "box": true,
+            "id": "box-2",
+            "type": "text",
+            "text": "这是一个文字盒子"
+          }
+        },
+        {
+          "insert": "这段文字有比较多的空格      。中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字。"
+        }
+      ]
+    }
+  ],
+  "_0YLIF0ix": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_3WK7EHdW",
+      "type": "text"
+    }
+  ],
+  "_4EFYr9aY": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_UZv99161",
+      "type": "text"
+    }
+  ],
+  "_7FHZOYU8": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_8nSHvv2i",
+      "type": "text"
+    }
+  ],
+  "_8_5V1qR4": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_umye9rp_",
+      "type": "text"
+    }
+  ],
+  "_9KgRpHLZ": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_cgJ4F18c",
+      "type": "text"
+    }
+  ],
+  "_9b0iNgKe": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_zD2GjUdQ",
+      "type": "text"
+    }
+  ],
+  "_BfuOeHER": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_QJuzgoUF",
+      "type": "text"
+    }
+  ],
+  "_Ch3mq0MY": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_uKlh8HBD",
+      "type": "text"
+    }
+  ],
+  "_GQ9htQeo": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_pf2QVRT9",
+      "type": "text"
+    }
+  ],
+  "_Gpfx1hC3": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_du_feCDG",
+      "type": "text"
+    }
+  ],
+  "_HyHHwnBh": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_r6jKZWuP",
+      "type": "text"
+    }
+  ],
+  "_LVuLwBds": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_C6swxXPT",
+      "type": "text"
+    }
+  ],
+  "_LzNhRr7w": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_NialSy_r",
+      "type": "text"
+    }
+  ],
+  "_S3FkK1Z4": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_jVlT7Epw",
+      "type": "text"
+    }
+  ],
+  "_SxQeAUz6": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_pUPugMzo",
+      "type": "text"
+    }
+  ],
+  "_Ts6FF4MB": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_ei0iK29g",
+      "type": "text"
+    }
+  ],
+  "_dV6P_v10": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_HR4T6ds4",
+      "type": "text"
+    }
+  ],
+  "_fiJRvs0s": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_UJxT7TFb",
+      "type": "text"
+    }
+  ],
+  "_iaF6BUsZ": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_pV4vMjv7",
+      "type": "text"
+    },
+    {
+      "id": "_drMwClo9",
+      "type": "table",
+      "children": [
+        "_rOwWKfLL",
+        "_KnEvhBAq",
+        "_4upAHeYd",
+        "_q_QS9j7W",
+        "_59Jhpg00",
+        "_GX6qDBWc",
+        "_S2G9_tEb",
+        "_5FHQ8s1d",
+        "_YAFcDtOp"
+      ],
+      "rows": 3,
+      "cols": 3
+    }
+  ],
+  "_jpVfg_XC": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_nyN8SdCb",
+      "type": "text"
+    }
+  ],
+  "_l5GgqDQV": [
+    {
+      "text": [
+        {
+          "insert": "aaaaaasdsadasdasdasdasd adadasd asdasdas das dasdas d asdad asd as"
+        }
+      ],
+      "id": "_kFXWpX65",
+      "type": "text"
+    },
+    {
+      "text": [
+        {
+          "insert": "aaaaaasdsadasdasdasdasd adadasd asdasdas das dasdas d asdad asd as"
+        }
+      ],
+      "id": "_kFXWpX64",
+      "type": "text"
+    }
+  ],
+  "_pa0KyZKu": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_XODKoELF",
+      "type": "text"
+    }
+  ],
+  "_ukvMi6YT": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_hC5xmZhB",
+      "type": "text"
+    }
+  ],
+  "_xEOQ4kk2": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_a9gvkgKM",
+      "type": "text"
+    }
+  ],
+  "_4upAHeYd": [
+    {
+      "text": [{ "insert": "b" }],
+      "id": "_cliGrNWo",
+      "type": "text"
+    }
+  ],
+  "_59Jhpg00": [
+    {
+      "text": [{ "insert": "b" }],
+      "id": "_v16raQFo",
+      "type": "text"
+    }
+  ],
+  "_5FHQ8s1d": [
+    {
+      "text": [{ "insert": "b" }],
+      "id": "_xC5kKb_5",
+      "type": "text"
+    }
+  ],
+  "_GX6qDBWc": [
+    {
+      "text": [{ "insert": "b" }],
+      "id": "_7nLDVrjK",
+      "type": "text"
+    }
+  ],
+  "_KnEvhBAq": [
+    {
+      "text": [{ "insert": "b" }],
+      "id": "_EbI1SQKB",
+      "type": "text"
+    }
+  ],
+  "_S2G9_tEb": [
+    {
+      "text": [{ "insert": "b" }],
+      "id": "_DCJt8j8Z",
+      "type": "text"
+    }
+  ],
+  "_YAFcDtOp": [
+    {
+      "text": [{ "insert": "b" }],
+      "id": "_DhBkIpDU",
+      "type": "text"
+    }
+  ],
+  "_q_QS9j7W": [
+    {
+      "text": [{ "insert": "b" }],
+      "id": "_dYymCN4R",
+      "type": "text"
+    }
+  ],
+  "_rOwWKfLL": [
+    {
+      "text": [{ "insert": "b" }],
+      "id": "_OdwVrIx5",
+      "type": "text"
+    }
+  ]
+}

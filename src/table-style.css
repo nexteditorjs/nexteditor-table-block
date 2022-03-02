@@ -1,0 +1,13 @@
+div[data-type=editor-block].table-block div[data-type=block-tools] .table-resize-gripper {
+  position: absolute;
+  background-color: transparent;
+  cursor: col-resize;
+  padding: 0 2px;
+}
+
+div[data-type=editor-block].table-block div[data-type=block-tools] .table-resize-gripper> .table-resize-gripper-indicator {
+  pointer-events: none;
+  background-color: red;
+  width: 100%;
+  height: 100%;
+}

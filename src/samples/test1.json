@@ -1,0 +1,121 @@
+{
+  "blocks": [
+    {
+      "id": "block-1",
+      "type": "text",
+      "text": [
+        {
+          "insert": "this 👌 is 😯 test text"
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "box": true,
+            "id": "box-1",
+            "type": "text",
+            "text": "this is a text box"
+          }
+        },
+        {
+          "insert": "this is some text with white spaces      . space is ended here."
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "box": true,
+            "id": "box-11",
+            "type": "br"
+          }
+        },
+        {
+          "insert": "this is some text with white spaces      . space is ended here."
+        }
+      ]
+    },
+    {
+      "id": "block-2",
+      "type": "text",
+      "text": [
+        {
+          "insert": "    测试中文文字👌   😯。"
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "box": true,
+            "id": "box-2",
+            "type": "text",
+            "text": "这是一个文字盒子"
+          }
+        },
+        {
+          "insert": "这段文字有比较多的空格      。中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字。"
+        }
+      ]
+    },
+    {
+      "id": "block-3",
+      "type": "embed",
+      "embedType": "image",
+      "embedData": {}
+    },
+    {
+      "id": "block-4",
+      "type": "text",
+      "text": [
+        {
+          "insert": "this 👌 is 😯 test text without space. "
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "box": true,
+            "id": "box-3",
+            "type": "text",
+            "text": "this is a text box"
+          }
+        },
+        {
+          "insert": "1111asdsdsdklfsdajfkladsjflkdsjafklsdajfklsadjfksadljfklsadfjskdlafjaskldfjsadklfjsadklfjdslakfjdsaklfjadslkfjasdklfjsdaklj"
+        }
+      ]
+    },
+    {
+      "id": "K7HKGVVo",
+      "type": "table",
+      "children": [
+        "_SxQeAUz6"
+      ],
+      "rows": 1,
+      "cols": 1
+    },
+    {
+      "id": "block-6",
+      "type": "text",
+      "text": [
+        {
+          "insert": "    测试中文文字👌   😯。"
+        },
+        {
+          "insert": " ",
+          "attributes": {
+            "box": true,
+            "id": "box-2",
+            "type": "text",
+            "text": "这是一个文字盒子"
+          }
+        },
+        {
+          "insert": "这段文字有比较多的空格      。中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字中文文字。"
+        }
+      ]
+    }
+  ],
+  "_SxQeAUz6": [
+    {
+      "text": [{ "insert": "a" }],
+      "id": "_pUPugMzo",
+      "type": "text"
+    }
+  ]
+}
