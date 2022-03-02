@@ -1,6 +1,6 @@
 {
   "name": "@nexteditorjs/nexteditor-table-block",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "files": [
     "dist"
   ],
@@ -9,8 +9,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && tsc --emitDeclarationOnly",
-    "dist": "tsc --project tsconfig.dist.json && vite build && tsc --emitDeclarationOnly --project tsconfig.dist.json"
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "dist": "vite build && tsc --emitDeclarationOnly --project tsconfig.dist.json"
   },
   "dependencies": {
     "@nexteditorjs/nexteditor-core": "^0.0.1",
