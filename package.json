@@ -1,16 +1,16 @@
 {
   "name": "@nexteditorjs/nexteditor-table-block",
-  "version": "0.0.0",
+  "version": "0.0.1-beta.1",
   "files": [
-    "./dist/index.umd.js",
-    "./dist/index.d.ts"
+    "dist"
   ],
   "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && tsc --emitDeclarationOnly"
+    "build": "tsc && vite build && tsc --emitDeclarationOnly",
+    "dist": "tsc --project tsconfig.dist.json && vite build && tsc --emitDeclarationOnly --project tsconfig.dist.json"
   },
   "dependencies": {
     "@nexteditorjs/nexteditor-core": "^0.0.1",
