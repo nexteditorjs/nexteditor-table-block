@@ -14,6 +14,11 @@ div[data-type=editor-block].table-block div[data-type=block-tools] .table-resize
 
 
 /* table */
+div[data-type=editor-block].table-block > div[data-type=block-content] {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 div[data-type=editor-block].table-block > div[data-type=block-content] > table {
   border-collapse: collapse;
   width: max-content;
