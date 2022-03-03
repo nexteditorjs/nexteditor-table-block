@@ -11,3 +11,44 @@ div[data-type=editor-block].table-block div[data-type=block-tools] .table-resize
   width: 100%;
   height: 100%;
 }
+
+
+/* table */
+div[data-type=editor-block].table-block > div[data-type=block-content] > table {
+  border-collapse: collapse;
+  width: max-content;
+  border-spacing: 0;
+}
+
+div[data-type=editor-block].table-block > div[data-type=block-content] > table,
+div[data-type=editor-block].table-block > div[data-type=block-content] > table td,
+div[data-type=editor-block].table-block > div[data-type=block-content] > table th {
+  border: 1px solid grey;
+  background-color: transparent;
+}
+
+div[data-type=editor-block].table-block > div[data-type=block-content] > table td {
+  min-width: 40px;
+  /* padding: 8px; */
+  border: 2px solid #ddd;
+  padding: 0;
+}
+
+div[data-type=editor-block].table-block > div[data-type=block-content] > table td div[data-type=editor-container].child {
+  padding: 8px;
+}
+
+/* table full select */
+div[data-type=editor-block].table-block.full-selected > div[data-type=block-content] > table {
+  background-color: var(--selection-background);
+}
+
+/* table partial select */
+div[data-type=editor-block].table-block > div[data-type=block-content] > table td.selected {
+  background-color: var(--selection-background);
+}
+
+/* nested table */
+div[data-type=editor-block].table-block > div[data-type=block-content] > table td div[data-type=editor-block].table-block > div[data-type=block-content] > table {
+  max-width: 100%;
+}

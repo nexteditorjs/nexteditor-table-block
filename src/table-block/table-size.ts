@@ -1,4 +1,5 @@
 import { BlockElement, NextEditor, getContainerMinWidth, getContainerWidth } from '@nexteditorjs/nexteditor-core';
+import { getBlockTable } from './table-dom';
 import { TableGrid } from './table-grid';
 
 const TABLE_CELL_MIN_WIDTH = 40;
@@ -36,6 +37,15 @@ function getRowMinWidth(editor: NextEditor, grid: TableGrid, row: number) {
   return minWidth;
 }
 
+export function getTableCellPadding(table: HTMLTableElement) {
+  const cell = table.querySelector('td') as HTMLTableCellElement;
+  if (!cell) return 0;
+  const style = window.getComputedStyle(cell);
+  const borderLeft = Number.parseInt(style.borderLeft, 10);
+  const borderRight = Number.parseInt(style.borderRight, 10);
+  return (borderLeft + borderRight) / 2;
+}
+
 export function getTableMinWidth(editor: NextEditor, tableBlock: BlockElement) {
   const grid = TableGrid.fromBlock(tableBlock);
   //
@@ -45,5 +55,8 @@ export function getTableMinWidth(editor: NextEditor, tableBlock: BlockElement) {
     minWidth = Math.max(minWidth, getRowMinWidth(editor, grid, row));
     //
   }
-  return minWidth;
+  //
+  const outerWidth = getTableCellPadding(getBlockTable(tableBlock));
+  //
+  return minWidth + outerWidth;
 }
