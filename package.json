@@ -13,7 +13,7 @@
     "dist": "vite build && tsc --emitDeclarationOnly --project tsconfig.dist.json"
   },
   "dependencies": {
-    "@nexteditorjs/nexteditor-core": "^0.0.5",
+    "@nexteditorjs/nexteditor-core": "^0.0.6",
     "blueimp-md5": "^2.19.0"
   },
   "devDependencies": {
