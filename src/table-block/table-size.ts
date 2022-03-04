@@ -23,9 +23,8 @@ function getRowMinWidth(editor: NextEditor, grid: TableGrid, row: number) {
     //
     let containerWidth = getContainerMinWidth(editor, cell.container) ?? (TABLE_COLUMN_MIN_WIDTH * cell.colSpan);
     //
-    let containerStyleWidth = getContainerWidth(cell.container);
+    const containerStyleWidth = getContainerWidth(cell.container, { withPadding: true });
     if (containerStyleWidth) {
-      containerStyleWidth += 3; // add border width
       if (containerStyleWidth > containerWidth) {
         containerWidth = containerStyleWidth;
       }

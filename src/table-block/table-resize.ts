@@ -4,6 +4,7 @@ import {
 } from '@nexteditorjs/nexteditor-core';
 import { getBlockTable, getChildContainerInCell } from './table-dom';
 import { TableCell, TableGrid } from './table-grid';
+import { getTableCellPadding } from './table-size';
 
 const GRIPPER_SIZE = 7;
 const GRIPPER_SIZE_HALF = (GRIPPER_SIZE - 1) / 2;
@@ -173,16 +174,19 @@ class TableResizeMouseHandler {
       const cellRect = cell.getBoundingClientRect();
       let newWidth = x - cellRect.left + GRIPPER_SIZE_HALF - CONTAINER_CELL_DELTA;
       const container = getChildContainerInCell(cell);
-      const minWidth = getContainerMinWidth(this.editor, container);
+      let minWidth = getContainerMinWidth(this.editor, container);
       if (minWidth) {
+        minWidth += getTableCellPadding(this.table);
+        // console.log('min-width', minWidth);
         if (newWidth < minWidth) {
           newWidth = minWidth;
         }
       }
       //
       const parentContainer = getParentContainer(this.block);
-      const parentContainerWidth = getContainerWidth(parentContainer);
+      const parentContainerWidth = getContainerWidth(parentContainer, { withPadding: false });
       if (parentContainerWidth) {
+        // console.log('parent width', parentContainerWidth);
         // check width
         const currentWidth = container.getBoundingClientRect().width;
         const currentTableWidth = this.table.getBoundingClientRect().width;
