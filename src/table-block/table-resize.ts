@@ -143,9 +143,6 @@ class TableResizeMouseHandler {
     } else {
       removeResizeGripper(this.block);
     }
-    //
-    this.editor.selection.caret.update();
-    //
   }
 
   private handleMouseMove = (event: MouseEvent) => {
@@ -200,6 +197,8 @@ class TableResizeMouseHandler {
     });
     //
     updateResizeGripper(this.block, cell);
+    //
+    this.editor.selection.caret.update();
   };
 
   private handleResizeEnd = (drag: unknown, event: MouseEvent, elem: HTMLElement, deltaX: number, deltaY: number) => {

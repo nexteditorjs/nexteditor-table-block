@@ -80,7 +80,7 @@ export class TableGrid {
 
   private static caches = new SimpleCache<TableGrid>(CACHE_EXPIRE_SECONDS);
 
-  constructor(table: HTMLTableElement) {
+  constructor(public table: HTMLTableElement) {
     //
     const grid = table2Grid(table);
     grid.forEach((row) => {
@@ -326,11 +326,20 @@ export class TableGrid {
   }
 
   static fromTable(table: HTMLTableElement): TableGrid {
-    return this.caches.getSync(getTableKey(table), () => {
+    //
+    const key = getTableKey(table);
+    const grid = this.caches.getSync(key, () => {
       console.debug('create table grid', table);
       const grid = new TableGrid(table);
       return grid;
     });
+    //
+    if (grid.table !== table) {
+      this.caches.delete(key);
+      return this.fromTable(table);
+    }
+    //
+    return grid;
   }
 
   static fromBlock(block: BlockElement): TableGrid {
