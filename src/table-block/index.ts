@@ -4,6 +4,7 @@ import {
   ContainerElement, MoveDirection, BlockPosition, SimpleBlockPosition,
   createComplexBlockPosition, EditorComplexSelectionRange,
   DocBlock, NextContainerOptions, isTextKindBlock, createEmptyContainer, genId, trimChar,
+  ConvertBlockResult,
 } from '@nexteditorjs/nexteditor-core';
 import { createBlockContent } from './create-content';
 import { DocTableBlockData } from './doc-table-data';
@@ -106,7 +107,7 @@ function updateBlockData(editor: NextEditor, block: BlockElement, blockData: Doc
 
 }
 
-function convertFrom(editor: NextEditor, srcBlock: BlockElement): DocBlock | null {
+function convertFrom(editor: NextEditor, srcBlock: BlockElement): ConvertBlockResult | null {
   //
   if (!isTextKindBlock(srcBlock)) {
     return null;
@@ -129,7 +130,10 @@ function convertFrom(editor: NextEditor, srcBlock: BlockElement): DocBlock | nul
     //
   }
   //
-  const data: DocTableBlockData = {
+  const focusContainerId = children[cols];
+  const focusBlockId = editor.doc.getContainerBlocks(focusContainerId)[0].id;
+  //
+  const blockData: DocTableBlockData = {
     id: genId(),
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     type: TableBlock.blockType,
@@ -137,7 +141,10 @@ function convertFrom(editor: NextEditor, srcBlock: BlockElement): DocBlock | nul
     cols,
     children,
   };
-  return data;
+  return {
+    blockData,
+    focusBlockId,
+  };
 }
 
 const TableBlock: ComplexKindBlock = {
