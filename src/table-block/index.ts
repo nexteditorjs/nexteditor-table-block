@@ -1,8 +1,12 @@
 import {
-  NextEditor, getContainerId, isContainer, assert, addClass, removeClass, BlockElement, ComplexBlockPosition, ComplexKindBlock,
-  ContainerElement, MoveDirection, BlockPosition, SimpleBlockPosition, createComplexBlockPosition, EditorComplexSelectionRange, DocBlock, NextContainerOptions,
+  NextEditor, getContainerId, isContainer, assert,
+  addClass, removeClass, BlockElement, ComplexBlockPosition, ComplexKindBlock,
+  ContainerElement, MoveDirection, BlockPosition, SimpleBlockPosition,
+  createComplexBlockPosition, EditorComplexSelectionRange,
+  DocBlock, NextContainerOptions, isTextKindBlock, createEmptyContainer, genId, trimChar,
 } from '@nexteditorjs/nexteditor-core';
 import { createBlockContent } from './create-content';
+import { DocTableBlockData } from './doc-table-data';
 import { getEditorSelectedContainers, getTableSelectedContainers } from './get-selected-containers';
 import { getTableChildContainers, getContainerCell, getTableNextContainer } from './table-container';
 import { getChildContainerInCell, getBlockTable, getTableCells } from './table-dom';
@@ -102,6 +106,40 @@ function updateBlockData(editor: NextEditor, block: BlockElement, blockData: Doc
 
 }
 
+function convertFrom(editor: NextEditor, srcBlock: BlockElement): DocBlock | null {
+  //
+  if (!isTextKindBlock(srcBlock)) {
+    return null;
+  }
+  //
+  const text = trimChar(editor.getBlockString(srcBlock).trim(), '|');
+  const columns = text.split('|');
+  const colCount = columns.length;
+  if (colCount < 2) return null;
+  //
+  const rows = 3;
+  const cols = columns.length;
+  //
+  const children: string[] = [];
+  for (let i = 0; i < 3; i++) {
+    //
+    columns.forEach((text) => {
+      children.push(createEmptyContainer(editor.doc, i === 0 ? text : ''));
+    });
+    //
+  }
+  //
+  const data: DocTableBlockData = {
+    id: genId(),
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    type: TableBlock.blockType,
+    rows,
+    cols,
+    children,
+  };
+  return data;
+}
+
 const TableBlock: ComplexKindBlock = {
   blockType: 'table',
   blockKind: 'complex',
@@ -117,6 +155,7 @@ const TableBlock: ComplexKindBlock = {
   getMinWidth,
   getSelectedContainers: getTableSelectedContainers,
   updateBlockData,
+  convertFrom,
 };
 
 export default TableBlock;

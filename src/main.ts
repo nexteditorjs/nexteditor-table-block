@@ -4,6 +4,7 @@ import {
   createEditor,
   editorBlocks,
   LocalDoc,
+  MarkdownInputHandler,
 } from '@nexteditorjs/nexteditor-core';
 import TableBlock from '.';
 import './style.css';
@@ -16,5 +17,7 @@ assert(app, 'app does not exists');
 
 
 const editor = createEditor(app, new LocalDoc(testDocData as any));
+
+editor.input.addHandler(new MarkdownInputHandler());
 
 (window as any).editor = editor;

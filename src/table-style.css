@@ -45,12 +45,12 @@ div[data-type=editor-block].table-block > div[data-type=block-content] > table t
 
 /* table full select */
 div[data-type=editor-block].table-block.full-selected > div[data-type=block-content] > table {
-  background-color: var(--selection-background);
+  background-color: var(--background-selection);
 }
 
 /* table partial select */
 div[data-type=editor-block].table-block > div[data-type=block-content] > table td.selected {
-  background-color: var(--selection-background);
+  background-color: var(--background-selection);
 }
 
 /* nested table */
