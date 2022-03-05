@@ -1,6 +1,6 @@
 {
   "name": "@nexteditorjs/nexteditor-table-block",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "files": [
     "dist"
   ],
