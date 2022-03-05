@@ -4,8 +4,9 @@ import {
   createEditor,
   editorBlocks,
   LocalDoc,
-  MarkdownInputHandler,
 } from '@nexteditorjs/nexteditor-core';
+import { MarkdownInputHandler } from '@nexteditorjs/nexteditor-input-handlers';
+
 import TableBlock from '.';
 import './style.css';
 import testDocData from './samples/test.json';
