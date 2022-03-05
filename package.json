@@ -1,6 +1,6 @@
 {
   "name": "@nexteditorjs/nexteditor-table-block",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "files": [
     "dist"
   ],
@@ -13,7 +13,7 @@
     "dist": "vite build && tsc --emitDeclarationOnly --project tsconfig.dist.json"
   },
   "dependencies": {
-    "@nexteditorjs/nexteditor-core": "^0.0.6",
+    "@nexteditorjs/nexteditor-core": "^0.0.7",
     "blueimp-md5": "^2.19.0"
   },
   "devDependencies": {
