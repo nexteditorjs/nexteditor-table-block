@@ -22,7 +22,7 @@ module.exports = {
     "rules": {
         "object-curly-newline": ["off"],
         "no-constant-condition": 0,
-        "max-len": ["error", { "code": 160 }],
+        "max-len": ["error", { "code": 200 }],
         "no-plusplus": 0,
         "no-continue": 0,
         "@typescript-eslint/no-shadow": 0,

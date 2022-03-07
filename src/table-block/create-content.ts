@@ -79,7 +79,7 @@ function createTable(editor: NextEditor, tableData: DocTableBlockData) {
   return table;
 }
 
-export function createBlockContent(editor: NextEditor, container: ContainerElement, blockElement: BlockElement, blockData: DocBlock): BlockContentElement {
+export function createBlockContent(editor: NextEditor, container: ContainerElement, blockIndex: number, blockElement: BlockElement, blockData: DocBlock): BlockContentElement {
   assert(blockData.type === 'table', 'not table data');
   const tableData = blockData as DocTableBlockData;
   //
