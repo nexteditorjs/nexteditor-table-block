@@ -109,7 +109,7 @@ function updateBlockData(editor: NextEditor, block: BlockElement, blockData: Doc
 
 function convertFrom(editor: NextEditor, srcBlock: BlockElement): ConvertBlockResult | null {
   //
-  if (!isTextKindBlock(srcBlock)) {
+  if (!isTextKindBlock(editor, srcBlock)) {
     return null;
   }
   //

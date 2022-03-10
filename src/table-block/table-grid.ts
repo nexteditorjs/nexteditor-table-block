@@ -39,7 +39,7 @@ export class TableCell implements DocTableCellData {
   }
 
   get container(): ContainerElement {
-    const containers = this.table.querySelectorAll(`#${this.cellId}`);
+    const containers = this.table.querySelectorAll(`[data-container-id=${this.cellId}]`);
     assert(containers.length === 1);
     assert(isContainer(containers[0]));
     const container = containers[0] as ContainerElement;
