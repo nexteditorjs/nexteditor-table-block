@@ -6,7 +6,7 @@ import {
   DocBlock, NextContainerOptions, isTextKindBlock, createEmptyContainer, genId, trimChar,
   ConvertBlockResult,
 } from '@nexteditorjs/nexteditor-core';
-import { createBlockContent } from './create-content';
+import { createBlockContent, handleDeleteBlock } from './create-content';
 import { DocTableBlockData } from './doc-table-data';
 import { getEditorSelectedContainers, getTableSelectedContainers } from './get-selected-containers';
 import { getTableChildContainers, getContainerCell, getTableNextContainer } from './table-container';
@@ -80,10 +80,12 @@ function updateSelection(editor: NextEditor, block: BlockElement, from: BlockPos
   });
 }
 
-function clearSelection(editor: NextEditor, block: BlockElement): void {
-  removeClass(block, 'full-selected');
-  block.querySelectorAll('td.selected').forEach((c) => {
-    removeClass(c, 'selected');
+function clearSelection(editor: NextEditor): void {
+  editor.rootContainer.querySelectorAll('[data-type="editor-block"][data-block-type="table"]').forEach((block) => {
+    removeClass(block, 'full-selected');
+    block.querySelectorAll('td.selected').forEach((c) => {
+      removeClass(c, 'selected');
+    });
   });
 }
 
@@ -163,6 +165,7 @@ const TableBlock: ComplexKindBlock = {
   getSelectedContainers: getTableSelectedContainers,
   updateBlockData,
   convertFrom,
+  handleDeleteBlock,
 };
 
 export default TableBlock;

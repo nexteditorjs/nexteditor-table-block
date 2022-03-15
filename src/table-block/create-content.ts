@@ -3,7 +3,7 @@ import {
 } from '@nexteditorjs/nexteditor-core';
 import { DocTableGrid } from './doc-table-grid';
 import { DocTableBlockData } from './doc-table-data';
-import { bindTableResizeEvent } from './table-resize';
+import { bindTableResizeEvent, unbindTableResizeEvent } from './table-resize';
 
 //
 function createTable(editor: NextEditor, tableData: DocTableBlockData) {
@@ -90,4 +90,9 @@ export function createBlockContent(editor: NextEditor, container: ContainerEleme
   bindTableResizeEvent(editor, blockElement);
   //
   return content;
+}
+
+
+export function handleDeleteBlock(editor: NextEditor, block: BlockElement, local: boolean) {
+  unbindTableResizeEvent(editor, block);
 }
