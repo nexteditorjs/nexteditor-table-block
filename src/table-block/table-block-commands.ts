@@ -2,7 +2,7 @@ import { BlockElement, CommandItem,
   ComplexBlockPosition,
   ContainerElement,
   createBlockSimpleRange, executeBlockCommand, getBlockCommands,
-  getBlockTextLength, getChildBlocks, intersectionCommands, NextEditor, SelectionRange,
+  getBlockTextLength, getChildBlocks, mergeCommands, NextEditor, SelectionRange,
 } from '@nexteditorjs/nexteditor-core';
 import { getTableSelectedContainers } from './get-selected-containers';
 import { getTableChildContainers } from './table-container';
@@ -28,7 +28,7 @@ export function getAvailableCommands(editor: NextEditor, block: BlockElement, ra
     //
   });
   //
-  return intersectionCommands(blockCommands);
+  return mergeCommands(blockCommands);
 }
 
 export function executeCommand(editor: NextEditor, block: BlockElement, range: SelectionRange, command: string, params?: { [index: string] : unknown }): unknown | undefined {
