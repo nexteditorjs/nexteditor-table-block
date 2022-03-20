@@ -9,6 +9,8 @@ import {
 import { createBlockContent, handleDeleteBlock } from './create-content';
 import { DocTableBlockData } from './doc-table-data';
 import { getEditorSelectedContainers, getTableSelectedContainers } from './get-selected-containers';
+import { executeCommand, getAvailableCommands } from './table-block-commands';
+import { getClientRects } from './table-client-rects';
 import { getTableChildContainers, getContainerCell, getTableNextContainer } from './table-container';
 import { getChildContainerInCell, getBlockTable, getTableCells } from './table-dom';
 import { getTableMinWidth } from './table-size';
@@ -166,6 +168,9 @@ const TableBlock: ComplexKindBlock = {
   updateBlockData,
   convertFrom,
   handleDeleteBlock,
+  getAvailableCommands,
+  executeCommand,
+  getClientRects,
 };
 
 export default TableBlock;

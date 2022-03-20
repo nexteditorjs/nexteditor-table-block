@@ -14,7 +14,6 @@ export function getEditorSelectedContainers(editor: NextEditor, from: ComplexBlo
   return containers;
 }
 
-
 export function getTableSelectedContainers(block: BlockElement, from: ComplexBlockPosition, to: ComplexBlockPosition): ContainerElement[] {
   assert(from.blockId === to.blockId, 'only allow select in single table block');
   const grid = TableGrid.fromBlock(block);
@@ -26,4 +25,3 @@ export function getTableSelectedContainers(block: BlockElement, from: ComplexBlo
   //
   return containers;
 }
-

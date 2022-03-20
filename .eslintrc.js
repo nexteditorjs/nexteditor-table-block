@@ -4,11 +4,11 @@ module.exports = {
         "es2021": true
     },
     "extends": [
+        "prettier",
         "eslint:recommended",
         'airbnb-base',
         'airbnb-typescript/base',
         "plugin:@typescript-eslint/recommended",
-        "prettier"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
