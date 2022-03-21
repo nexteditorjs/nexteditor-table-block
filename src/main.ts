@@ -13,11 +13,10 @@ import testDocData from './samples/test.json';
 const app = document.querySelector<HTMLDivElement>('#app');
 assert(app, 'app does not exists');
 
-
 const editor = createEditor(app, new LocalDoc(testDocData as any), {
   components: {
     blocks: [TableBlock],
-  }
+  },
 });
 
 editor.input.addHandler(new MarkdownInputHandler());

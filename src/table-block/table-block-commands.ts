@@ -1,59 +1,18 @@
-import { BlockElement, CommandItem,
-  ComplexBlockPosition,
-  ContainerElement,
-  createBlockSimpleRange, executeBlockCommand, getBlockCommands,
-  getBlockTextLength, getChildBlocks, mergeCommands, NextEditor, SelectionRange,
+import { BlockCommandItem, BlockElement,
+  CommandParams,
+  CommandResult,
+  getBlockType, NextEditor, NextEditorCommandProvider, SelectionRange,
 } from '@nexteditorjs/nexteditor-core';
-import { getTableSelectedContainers } from './get-selected-containers';
-import { getTableChildContainers } from './table-container';
 
-export function getAvailableCommands(editor: NextEditor, block: BlockElement, range: SelectionRange): CommandItem[] {
-  //
-  let containers: ContainerElement[] = [];
-  if (range.isSimple()) {
-    containers = getTableChildContainers(block);
-  } else {
-    containers = getTableSelectedContainers(block, range.start as ComplexBlockPosition, range.end as ComplexBlockPosition);
+export default class TableBlockCommandProvider implements NextEditorCommandProvider {
+  getAvailableCommands(editor: NextEditor, block: BlockElement, range: SelectionRange): BlockCommandItem[] {
+    if (getBlockType(block) !== 'table') {
+      return [];
+    }
+    return [];
   }
-  //
-  const blockCommands: CommandItem[][] = [];
-  containers.forEach((container) => {
-    const blocks = getChildBlocks(container);
-    blocks.forEach((block) => {
-      const length = getBlockTextLength(editor, block);
-      const newRange = createBlockSimpleRange(editor, block, 0, length);
-      const commands = getBlockCommands(editor, block, newRange);
-      blockCommands.push(commands);
-    });
-    //
-  });
-  //
-  return mergeCommands(blockCommands);
-}
 
-export function executeCommand(editor: NextEditor, block: BlockElement, range: SelectionRange, command: string, params?: { [index: string] : unknown }): unknown | undefined {
-  if (!command.startsWith('style-')) {
-    console.warn(`unknown command: ${command}`);
-    return undefined;
+  executeCommand(editor: NextEditor, block: BlockElement, range: SelectionRange, command: string, params: CommandParams, result: CommandResult): boolean {
+    return false;
   }
-  //
-  let containers: ContainerElement[] = [];
-  if (range.isSimple()) {
-    containers = getTableChildContainers(block);
-  } else {
-    containers = getTableSelectedContainers(block, range.start as ComplexBlockPosition, range.end as ComplexBlockPosition);
-  }
-  //
-  const result: unknown[] = [];
-  containers.forEach((container) => {
-    const blocks = getChildBlocks(container);
-    blocks.forEach((block) => {
-      const length = getBlockTextLength(editor, block);
-      const newRange = createBlockSimpleRange(editor, block, 0, length);
-      const ret = executeBlockCommand(editor, block, newRange, command, params);
-      result.push(ret);
-    });
-    //
-  });
-  return result;
 }
