@@ -13,7 +13,6 @@ import { getClientRects } from './table-client-rects';
 import { getTableChildContainers, getContainerCell, getTableNextContainer } from './table-container';
 import { getChildContainerInCell, getBlockTable, getTableCells } from './table-dom';
 import { getTableMinWidth } from './table-size';
-import TableBlockCommandProvider from './table-block-commands';
 
 function getBlockTextLength(block: BlockElement): number {
   return 1;
@@ -172,4 +171,3 @@ const TableBlock: ComplexKindBlock = {
 };
 
 export default TableBlock;
-export { TableBlockCommandProvider };

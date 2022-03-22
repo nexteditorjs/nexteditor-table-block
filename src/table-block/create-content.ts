@@ -92,7 +92,6 @@ export function createBlockContent(editor: NextEditor, container: ContainerEleme
   return content;
 }
 
-
 export function handleDeleteBlock(editor: NextEditor, block: BlockElement, local: boolean) {
   unbindTableResizeEvent(editor, block);
 }
