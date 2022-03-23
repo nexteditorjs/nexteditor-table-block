@@ -27,7 +27,9 @@ export function canMergeCells(editor: NextEditor, block: BlockElement, range: Se
 
 export function mergeRangeCells(range: SelectionRange) {
   //
-  const { editor, block, table, startRow, startCol, endRow, endCol } = getRangeDetails(range);
+  const { editor, block, table, startRow, startCol, endCell } = getRangeDetails(range);
+  const endRow = endCell.row + endCell.rowSpan - 1;
+  const endCol = endCell.col + endCell.colSpan - 1;
   //
   splitRangeCells(range);
   //
