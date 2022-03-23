@@ -5,7 +5,7 @@ import {
 } from '@nexteditorjs/nexteditor-core';
 import cloneDeep from 'lodash.clonedeep';
 import { TableGrid } from '../table-block/table-grid';
-import { splitRangeCells } from './split-cells';
+import { splitRangeCells } from './split-cell';
 import { getRangeDetails } from './table-range';
 
 export function canMergeCells(editor: NextEditor, block: BlockElement, range: SelectionRange) {
@@ -25,7 +25,7 @@ export function canMergeCells(editor: NextEditor, block: BlockElement, range: Se
   return true;
 }
 
-export function mergeCells(range: SelectionRange) {
+export function mergeRangeCells(range: SelectionRange) {
   //
   const { editor, block, table, startRow, startCol, endRow, endCol } = getRangeDetails(range);
   //
@@ -48,10 +48,10 @@ export function mergeCells(range: SelectionRange) {
   assert(selectedCells.length > 0);
   const firstCellData = selectedCells[0];
   const lastCells = selectedCells.slice(1);
-  const firstCellContainer = grid.getCellByContainerId(firstCellData.cellId).container;
+  const firstCellContainer = grid.getCellByContainerId(firstCellData.containerId).container;
   const deletedContainers: string[] = [];
   lastCells.forEach((cellData) => {
-    const container = grid.getCellByContainerId(cellData.cellId).container;
+    const container = grid.getCellByContainerId(cellData.containerId).container;
     const containerId = getContainerId(container);
     const doc = containerToDoc(editor, containerId);
     editor.insertDocAt(firstCellContainer, getChildBlockCount(firstCellContainer), doc);

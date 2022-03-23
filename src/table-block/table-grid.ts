@@ -7,7 +7,7 @@ import { DocTableCellData, DocTableRow, DocTableCellIndex } from './doc-table-gr
 const CACHE_EXPIRE_SECONDS = 60;
 
 export class TableCell implements DocTableCellData {
-  cellId: string;
+  containerId: string;
 
   row: number;
 
@@ -23,7 +23,7 @@ export class TableCell implements DocTableCellData {
 
   constructor(table: HTMLTableElement, cellData: DocTableCellData) {
     this.table = table;
-    this.cellId = cellData.cellId;
+    this.containerId = cellData.containerId;
     this.row = cellData.row;
     this.col = cellData.col;
     this.colSpan = cellData.colSpan;
@@ -39,7 +39,7 @@ export class TableCell implements DocTableCellData {
   }
 
   get container(): ContainerElement {
-    const containers = this.table.querySelectorAll(`[data-container-id=${this.cellId}]`);
+    const containers = this.table.querySelectorAll(`[data-container-id=${this.containerId}]`);
     assert(containers.length === 1);
     assert(isContainer(containers[0]));
     const container = containers[0] as ContainerElement;
@@ -143,7 +143,7 @@ export class TableGrid {
     const realCells: TableCell[] = [];
     cells.forEach((cell) => {
       const realCell = this.getRealCell(cell);
-      if (realCells.findIndex((test) => test.cellId === realCell.cellId) === -1) {
+      if (realCells.findIndex((test) => test.containerId === realCell.containerId) === -1) {
         realCells.push(realCell);
       }
     });
@@ -177,7 +177,7 @@ export class TableGrid {
     if (!cell.virtual) {
       return cell;
     }
-    const ret = this.getCellById(cell.cellId);
+    const ret = this.getCellById(cell.containerId);
     assert(!ret.virtual);
     return ret;
   }
@@ -278,7 +278,7 @@ export class TableGrid {
     const rowCount = this.rowCount;
     let nextCellData = cellData;
     let nextRow = cellData.row;
-    while (nextCellData.cellId === cellData.cellId) {
+    while (nextCellData.containerId === cellData.containerId) {
       nextRow += 1;
       if (nextRow >= rowCount) {
         return null;
@@ -291,7 +291,7 @@ export class TableGrid {
   getTopCell(cellData: TableCell): TableCell | null {
     let prevCellData = cellData;
     let nextRow = cellData.row;
-    while (prevCellData.cellId === cellData.cellId) {
+    while (prevCellData.containerId === cellData.containerId) {
       nextRow -= 1;
       if (nextRow < 0) {
         return null;
@@ -311,7 +311,7 @@ export class TableGrid {
 
   getCellById(cellId: string): TableCell {
     const cells = this.cells;
-    const cell = cells.find((c) => c.cellId === cellId);
+    const cell = cells.find((c) => c.containerId === cellId);
     assert(cell);
     return cell;
   }

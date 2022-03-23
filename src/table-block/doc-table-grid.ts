@@ -3,7 +3,7 @@ import { assert } from '@nexteditorjs/nexteditor-core';
 import { DocTableBlockData } from './doc-table-data';
 
 export interface DocTableCellData {
-  cellId: string;
+  containerId: string;
   row: number;
   col: number;
   colSpan: number;
@@ -108,16 +108,16 @@ export class DocTableGrid {
     //
     let col = 0;
     let row = 0;
-    children.forEach((cellId: string, index: number) => {
-      const cellColSpan = this._data[`${cellId}_colSpan`] as number || 1;
-      const cellRowSpan = this._data[`${cellId}_rowSpan`] as number || 1;
+    children.forEach((containerId: string, index: number) => {
+      const cellColSpan = this._data[`${containerId}_colSpan`] as number || 1;
+      const cellRowSpan = this._data[`${containerId}_rowSpan`] as number || 1;
       //
       for (let y = 0; y < cellRowSpan; y++) {
         for (let x = 0; x < cellColSpan; x++) {
           this._rows[row + y].setCell(col + x, {
             col,
             row,
-            cellId,
+            containerId,
             virtual: x !== 0 || y !== 0,
             colSpan: cellColSpan,
             rowSpan: cellRowSpan,
@@ -138,7 +138,7 @@ export class DocTableGrid {
     this._rows.forEach((row) => {
       row.forEach((cell) => {
         assert(cell);
-        assert(cell.cellId);
+        assert(cell.containerId);
       });
     });
   }

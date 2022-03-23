@@ -146,6 +146,8 @@ function convertFrom(editor: NextEditor, srcBlock: BlockElement): ConvertBlockRe
   };
 }
 
+// TODO: add selection to block
+
 const TableBlock: ComplexKindBlock = {
   blockType: 'table',
   blockKind: 'complex',

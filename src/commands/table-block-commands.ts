@@ -5,7 +5,8 @@ import { BlockCommandItem, BlockElement,
   getBlockKind,
   getBlockType, NextEditor, NextEditorCommandProvider, SelectionRange,
 } from '@nexteditorjs/nexteditor-core';
-import { canMergeCells, mergeCells } from './merge-cells';
+import { canMergeCells, mergeRangeCells } from './merge-cells';
+import { canSplitCell, splitRangeCells } from './split-cell';
 
 const TableCommands = [
   'table/merge-cells',
@@ -26,14 +27,25 @@ export default class TableBlockCommandProvider implements NextEditorCommandProvi
       return [];
     }
     //
+    const ext = {
+      blockId: getBlockId(block),
+      blockKind: getBlockKind(editor, block),
+      blockType: getBlockType(block),
+    };
+    //
     const commands: BlockCommandItem[] = [];
     if (canMergeCells(editor, block, range)) {
       commands.push({
         id: 'table/merge-cells',
         name: 'merge cells',
-        blockId: getBlockId(block),
-        blockKind: getBlockKind(editor, block),
-        blockType: getBlockType(block),
+        ...ext,
+      });
+    }
+    if (canSplitCell(editor, block, range)) {
+      commands.push({
+        id: 'table/split-cell',
+        name: 'split cell',
+        ...ext,
       });
     }
     //
@@ -49,7 +61,12 @@ export default class TableBlockCommandProvider implements NextEditorCommandProvi
     }
     //
     if (command === 'table/merge-cells') {
-      mergeCells(range);
+      mergeRangeCells(range);
+      return true;
+    }
+    //
+    if (command === 'table/split-cell') {
+      splitRangeCells(range);
       return true;
     }
     //
