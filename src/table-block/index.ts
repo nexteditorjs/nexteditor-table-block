@@ -3,7 +3,7 @@ import {
   addClass, removeClass, BlockElement, ComplexBlockPosition, ComplexKindBlock,
   ContainerElement, MoveDirection, BlockPosition, SimpleBlockPosition,
   createComplexBlockPosition, EditorComplexSelectionRange,
-  DocBlock, NextContainerOptions, isTextKindBlock, createEmptyContainer, genId, trimChar,
+  NextContainerOptions, isTextKindBlock, createEmptyContainer, genId, trimChar,
   ConvertBlockResult,
 } from '@nexteditorjs/nexteditor-core';
 import { createBlockContent, handleDeleteBlock } from './create-content';
