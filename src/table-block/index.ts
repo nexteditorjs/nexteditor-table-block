@@ -106,10 +106,6 @@ function getMinWidth(editor: NextEditor, tableBlock: BlockElement) {
   //
 }
 
-function updateBlockData(editor: NextEditor, block: BlockElement, blockData: DocBlock) {
-
-}
-
 function convertFrom(editor: NextEditor, srcBlock: BlockElement): ConvertBlockResult | null {
   //
   if (!isTextKindBlock(editor, srcBlock)) {
@@ -164,7 +160,6 @@ const TableBlock: ComplexKindBlock = {
   getNextContainer,
   getMinWidth,
   getSelectedContainers: getTableSelectedContainers,
-  updateBlockData,
   convertFrom,
   handleDeleteBlock,
   getClientRects,

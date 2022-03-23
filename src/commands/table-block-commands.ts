@@ -8,14 +8,14 @@ import { BlockCommandItem, BlockElement,
 import { canMergeCells, mergeCells } from './merge-cells';
 
 const TableCommands = [
-  'mergeCells',
-  'splitCell',
-  'insertColumnBefore',
-  'insertColumnAfter',
-  'insertRowAbove',
-  'insertRowBelow',
-  'deleteRows',
-  'deleteColumns',
+  'table/merge-cells',
+  'table/split-cell',
+  'table/insert-column-before',
+  'table/insert-column-after',
+  'table/insert-row-above',
+  'table/insert-row-below',
+  'table/delete-rows',
+  'table/delete-columns',
 ] as const;
 
 export type TableCommand = typeof TableCommands[number];
@@ -29,7 +29,7 @@ export default class TableBlockCommandProvider implements NextEditorCommandProvi
     const commands: BlockCommandItem[] = [];
     if (canMergeCells(editor, block, range)) {
       commands.push({
-        id: 'mergeCells',
+        id: 'table/merge-cells',
         name: 'merge cells',
         blockId: getBlockId(block),
         blockKind: getBlockKind(editor, block),
@@ -48,8 +48,9 @@ export default class TableBlockCommandProvider implements NextEditorCommandProvi
       return false;
     }
     //
-    if (command === 'mergeCells') {
+    if (command === 'table/merge-cells') {
       mergeCells(range);
+      return true;
     }
     //
     return false;

@@ -127,7 +127,7 @@ export class DocTableGrid {
       //
       const next = this.getNextEmptyCell(col, row);
       if (!next) {
-        assert(index === children.length - 1);
+        assert(index === children.length - 1, `invalid table data, no next empty cell: ${JSON.stringify(this._data)}`);
       } else {
         col = next.col;
         row = next.row;

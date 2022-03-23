@@ -27,6 +27,12 @@ function createTable(editor: NextEditor, tableData: DocTableBlockData) {
       if (!cell.virtual) {
         const subContainerId = tableData.children[containerIndex];
         const cellElem = createElement('td', [], rowElem);
+        if (cell.colSpan > 1) {
+          cellElem.colSpan = cell.colSpan;
+        }
+        if (cell.rowSpan > 1) {
+          cellElem.rowSpan = cell.rowSpan;
+        }
         //
         const container = editor.createChildContainer(cellElem, subContainerId);
         //

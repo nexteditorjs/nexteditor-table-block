@@ -54,7 +54,7 @@ export function mergeCells(range: SelectionRange) {
     const container = grid.getCellByContainerId(cellData.cellId).container;
     const containerId = getContainerId(container);
     const doc = containerToDoc(editor, containerId);
-    editor.insertDocAt(container, getChildBlockCount(container), doc);
+    editor.insertDocAt(firstCellContainer, getChildBlockCount(firstCellContainer), doc);
     //
     deletedContainers.push(containerId);
   });
@@ -81,35 +81,4 @@ export function mergeCells(range: SelectionRange) {
   //
   const startPos = createComplexBlockPosition(block, firstCellContainerId);
   editor.selection.setSelection(startPos);
-  //
-  // const colSpan = endCol - startCol + 1;
-  // const rowSpan = endRow - startRow + 1;
-  // const firstCell = firstCellData.cell;
-  // firstCell.colSpan = colSpan;
-  // firstCell.rowSpan = rowSpan;
-  //
-  // const blocks = containerUtils.getAllBlocks(firstCellContainer);
-  // const aligns = getAllBlocksAlign(editor, blocks);
-  // if (aligns.length > 1) {
-  //   // eslint-disable-next-line no-use-before-define
-  //   setCellAlign(block, { row: firstCellData.row, col: firstCellData.col }, 'left');
-  // } else {
-  //   // eslint-disable-next-line no-use-before-define
-  //   setCellAlign(block, { row: firstCellData.row, col: firstCellData.col }, 'center');
-  // }
-  //
-
-  //
-  // const data = blockUtils.saveData(block) as TableBlockData;
-  // editor.updateBlockData(block, data, {
-  //   fromUndo: false,
-  //   updateBlock: true,
-  //   partial: false,
-  // });
-  // const container = editor.getContainerById(firstCellData.cellId);
-  // assert(container);
-  // const focusedBlock = containerUtils.getBlockByIndex(container, containerUtils.getBlockCount(container) - 1);
-  // editor.selectBlock(focusedBlock, -1, -1);
-  // //
-  // updateChart(block, { updateNow: false });
 }
