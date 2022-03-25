@@ -1,6 +1,5 @@
 import {
-  assert, BlockElement, containerToDoc, createComplexBlockPosition,
-  DocBlockAttributes, getBlockType, getChildBlockCount,
+  assert, BlockElement, containerToDoc, createBlockSimpleRange, DocBlockAttributes, getBlockType, getChildBlockCount,
   getContainerId, NextEditor, SelectionRange,
 } from '@nexteditorjs/nexteditor-core';
 import cloneDeep from 'lodash.clonedeep';
@@ -77,10 +76,10 @@ export function mergeRangeCells(range: SelectionRange) {
   const newBlockData = blockData as DocBlockAttributes;
   delete newBlockData.id;
   delete newBlockData.type;
-  editor.updateBlockData(block, newBlockData);
-  //
+  const blocks = editor.getChildContainerData(firstCellContainerId);
+  const focusedBlock = blocks[0];
+  assert(focusedBlock, 'no child block');
+  const newRange = createBlockSimpleRange(editor, focusedBlock.id, 0);
+  editor.updateBlockData(block, newBlockData, newRange);
   editor.deleteChildContainers(deletedContainers);
-  //
-  const startPos = createComplexBlockPosition(block, firstCellContainerId);
-  editor.selection.setSelection(startPos);
 }

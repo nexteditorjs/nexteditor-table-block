@@ -1,4 +1,4 @@
-import { assert, BlockElement, createEmptyContainer, DocBlockAttributes, getBlockType, NextEditor, SelectionRange } from '@nexteditorjs/nexteditor-core';
+import { assert, BlockElement, createBlockSimpleRange, createEmptyContainer, DocBlockAttributes, getBlockType, NextEditor, SelectionRange } from '@nexteditorjs/nexteditor-core';
 import cloneDeep from 'lodash.clonedeep';
 import { DocTableCellIndex } from '../table-block/doc-table-grid';
 import { TableGrid } from '../table-block/table-grid';
@@ -57,7 +57,12 @@ export function splitCell(editor: NextEditor, block: BlockElement, index: DocTab
   };
   //
   newData.children = virtualCellContainersToChildren(virtualCellContainers);
-  editor.updateBlockData(block, newData);
+  //
+  const blocks = editor.getChildContainerData(cellData.containerId);
+  const focusedBlock = blocks[0];
+  assert(focusedBlock, 'no child block');
+  const newRange = createBlockSimpleRange(editor, focusedBlock.id, 0);
+  editor.updateBlockData(block, newData, newRange);
 }
 
 export function splitCells(editor: NextEditor, block: BlockElement, cellIndexes: DocTableCellIndex[]) {
