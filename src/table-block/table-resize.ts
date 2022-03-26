@@ -1,6 +1,7 @@
 import {
   assert, BlockElement, createElement, getBlockTools, NextEditor,
-  DragDrop, DragDropOptions, registerDragDrop, getContainerMinWidth, setContainerWidth, getParentContainer, getContainerWidth,
+  DragDrop, DragDropOptions, registerDragDrop, getContainerMinWidth,
+  getParentContainer, getContainerWidth, DocBlock, setContainerWidth,
 } from '@nexteditorjs/nexteditor-core';
 import { getBlockTable, getChildContainerInCell } from './table-dom';
 import { TableCell, TableGrid } from './table-grid';
@@ -97,6 +98,18 @@ function removeResizeGripper(block: BlockElement) {
   }
 }
 
+function changeContainerSize(editor: NextEditor, block: BlockElement, sizes: Map<string, number>) {
+  const sizeEntries = Array.from(sizes.entries()).map(([containerId, width]) => [`${containerId}_width`, width]);
+  const oldData = editor.getBlockData(block);
+  const newData: DocBlock = {
+    ...oldData,
+    ...Object.fromEntries(sizeEntries),
+  };
+  //
+  //
+  editor.updateBlockData(block, newData);
+}
+
 class TableResizeMouseHandler {
   static handlers = new WeakMap<BlockElement, TableResizeMouseHandler>();
 
@@ -167,33 +180,8 @@ class TableResizeMouseHandler {
     //
     const cells = getEffectedCells(this.table, cell);
     cells.forEach((cellData) => {
-      const cell = cellData.cell;
-      const cellRect = cell.getBoundingClientRect();
-      let newWidth = x - cellRect.left + GRIPPER_SIZE_HALF - CONTAINER_CELL_DELTA;
-      const container = getChildContainerInCell(cell);
-      let minWidth = getContainerMinWidth(this.editor, container);
-      if (minWidth) {
-        minWidth += getTableCellPadding(this.table);
-        // console.log('min-width', minWidth);
-        if (newWidth < minWidth) {
-          newWidth = minWidth;
-        }
-      }
-      //
-      const parentContainer = getParentContainer(this.block);
-      const parentContainerWidth = getContainerWidth(parentContainer, { withPadding: false });
-      if (parentContainerWidth) {
-        // console.log('parent width', parentContainerWidth);
-        // check width
-        const currentWidth = container.getBoundingClientRect().width;
-        const currentTableWidth = this.table.getBoundingClientRect().width;
-        const newTableWidth = currentTableWidth + (newWidth - currentWidth);
-        if (newTableWidth > parentContainerWidth) {
-          newWidth = currentWidth;
-        }
-      }
-      //
-      setContainerWidth(container, newWidth);
+      const newWidth = this.calCellNewSize(cellData, x);
+      setContainerWidth(cellData.container, newWidth);
     });
     //
     updateResizeGripper(this.block, cell);
@@ -201,11 +189,55 @@ class TableResizeMouseHandler {
     this.editor.selection.caret.update();
   };
 
-  private handleResizeEnd = (drag: unknown, event: MouseEvent, elem: HTMLElement, deltaX: number, deltaY: number) => {
+  private handleResizeEnd = (drag: DragDrop<HTMLTableCellElement>, event: MouseEvent, elem: HTMLElement, deltaX: number, deltaY: number) => {
+    if (this.draggingRefCell) {
+      const sizes = new Map<string, number>();
+      const x = event.x - drag.dragOffsetX;
+      const cells = getEffectedCells(this.table, this.draggingRefCell);
+      cells.forEach((cellData) => {
+        const newWidth = this.calCellNewSize(cellData, x);
+        if (newWidth) {
+          sizes.set(cellData.containerId, newWidth);
+        }
+      });
+      if (sizes.size > 0) {
+        changeContainerSize(this.editor, this.block, sizes);
+      }
+    }
     this.draggingRefCell = null;
     removeResizeGripper(this.block);
     this.updateGripper(event.x, event.y);
+    //
   };
+
+  private calCellNewSize(cellData: TableCell, x: number) {
+    const cell = cellData.cell;
+    const cellRect = cell.getBoundingClientRect();
+    let newWidth = x - cellRect.left + GRIPPER_SIZE_HALF - CONTAINER_CELL_DELTA;
+    const container = getChildContainerInCell(cell);
+    let minWidth = getContainerMinWidth(this.editor, container);
+    if (minWidth) {
+      minWidth += getTableCellPadding(this.table);
+      // console.log('min-width', minWidth);
+      if (newWidth < minWidth) {
+        newWidth = minWidth;
+      }
+    }
+    //
+    const parentContainer = getParentContainer(this.block);
+    const parentContainerWidth = getContainerWidth(parentContainer, { withPadding: false });
+    if (parentContainerWidth) {
+      // console.log('parent width', parentContainerWidth);
+      // check width
+      const currentWidth = container.getBoundingClientRect().width;
+      const currentTableWidth = this.table.getBoundingClientRect().width;
+      const newTableWidth = currentTableWidth + (newWidth - currentWidth);
+      if (newTableWidth > parentContainerWidth) {
+        newWidth = currentWidth;
+      }
+    }
+    return Math.round(newWidth);
+  }
 
   static register(editor: NextEditor, block: BlockElement) {
     const handler = new TableResizeMouseHandler(editor, block);
