@@ -1,5 +1,5 @@
 import {
-  NextEditor, assert, createElement, TextAlign, addClass, ContainerElement, BlockElement, DocBlock, BlockContentElement, createBlockContentElement, setContainerWidth,
+  NextEditor, assert, createElement, addClass, ContainerElement, BlockElement, DocBlock, BlockContentElement, createBlockContentElement, setContainerWidth,
 } from '@nexteditorjs/nexteditor-core';
 import { DocTableGrid } from './doc-table-grid';
 import { DocTableBlockData } from './doc-table-data';
@@ -35,29 +35,9 @@ function createTable(editor: NextEditor, tableData: DocTableBlockData) {
         }
         //
         const container = editor.createChildContainer(cellElem, subContainerId);
-        const width = tableData[`${subContainerId}_width`];
+        const width = tableData[`${subContainerId}/width`];
         if (width && typeof width === 'number') {
           setContainerWidth(container, width);
-        }
-        //
-        const align = tableData[`${subContainerId}_align`] as TextAlign;
-        if (align) {
-          const className = {
-            left: 'align-left',
-            right: 'align-right',
-            center: 'align-center',
-          }[align];
-          if (className) {
-            addClass(container, className);
-          }
-        }
-        const background = tableData[`${subContainerId}_background`] as string;
-        if (background) {
-          addClass(cellElem, background);
-        }
-        const color = tableData[`${subContainerId}_fontColor`] as string;
-        if (color) {
-          addClass(cellElem, color);
         }
         //
         containerIndex += 1;

@@ -109,8 +109,8 @@ export class DocTableGrid {
     let col = 0;
     let row = 0;
     children.forEach((containerId: string, index: number) => {
-      const cellColSpan = this._data[`${containerId}_colSpan`] as number || 1;
-      const cellRowSpan = this._data[`${containerId}_rowSpan`] as number || 1;
+      const cellColSpan = this._data[`${containerId}/colSpan`] as number || 1;
+      const cellRowSpan = this._data[`${containerId}/rowSpan`] as number || 1;
       //
       for (let y = 0; y < cellRowSpan; y++) {
         for (let x = 0; x < cellColSpan; x++) {

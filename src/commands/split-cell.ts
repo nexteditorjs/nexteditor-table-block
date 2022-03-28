@@ -41,8 +41,8 @@ export function splitCell(editor: NextEditor, block: BlockElement, index: DocTab
   delete newData.id;
   delete newData.type;
   //
-  delete newData[`${cellData.containerId}_colSpan`];
-  delete newData[`${cellData.containerId}_rowSpan`];
+  delete newData[`${cellData.containerId}/colSpan`];
+  delete newData[`${cellData.containerId}/rowSpan`];
   //
   const virtualCellContainersToChildren = (containerIds: string[][]) => {
     const ret: string[] = [];

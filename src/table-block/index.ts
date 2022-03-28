@@ -6,10 +6,10 @@ import {
   NextContainerOptions, isTextKindBlock, createEmptyContainer, genId, trimChar,
   ConvertBlockResult,
 } from '@nexteditorjs/nexteditor-core';
-import { cloneTableBlock } from './clone-table-data';
 import { createBlockContent, handleDeleteBlock } from './create-content';
 import { DocTableBlockData } from './doc-table-data';
 import { getEditorSelectedContainers, getTableSelectedContainers } from './get-selected-containers';
+import { selectionToDoc } from './selection-to-doc';
 import { getClientRects } from './table-client-rects';
 import { getTableChildContainers, getContainerCell, getTableNextContainer } from './table-container';
 import { getChildContainerInCell, getBlockTable, getTableCells } from './table-dom';
@@ -166,7 +166,7 @@ const TableBlock: ComplexKindBlock = {
   convertFrom,
   handleDeleteBlock,
   getClientRects,
-  cloneBlock: cloneTableBlock,
+  selectionToDoc,
 };
 
 export default TableBlock;

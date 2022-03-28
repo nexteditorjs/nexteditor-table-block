@@ -99,7 +99,7 @@ function removeResizeGripper(block: BlockElement) {
 }
 
 function changeContainerSize(editor: NextEditor, block: BlockElement, sizes: Map<string, number>) {
-  const sizeEntries = Array.from(sizes.entries()).map(([containerId, width]) => [`${containerId}_width`, width]);
+  const sizeEntries = Array.from(sizes.entries()).map(([containerId, width]) => [`${containerId}/width`, width]);
   const oldData = editor.getBlockData(block);
   const newData: DocBlock = {
     ...oldData,

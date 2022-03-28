@@ -63,8 +63,8 @@ export function mergeRangeCells(range: SelectionRange) {
   const firstCellContainerId = getContainerId(firstCellContainer);
   const colSpan = endCol - startCol + 1;
   const rowSpan = endRow - startRow + 1;
-  blockData[`${firstCellContainerId}_colSpan`] = colSpan;
-  blockData[`${firstCellContainerId}_rowSpan`] = rowSpan;
+  blockData[`${firstCellContainerId}/colSpan`] = colSpan;
+  blockData[`${firstCellContainerId}/rowSpan`] = rowSpan;
   //
   deletedContainers.forEach((deletedContainerId) => {
     assert(blockData.children, 'no table children');

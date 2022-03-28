@@ -28,8 +28,8 @@ export function table2Data(table: HTMLTableElement): DocTableBlockData {
       const containerId = getContainerId(container);
       cellIds.push(containerId);
       if (cell.colSpan > 1 || cell.rowSpan > 1) {
-        spanData[`${containerId}_colSpan`] = cell.colSpan;
-        spanData[`${containerId}_rowSpan`] = cell.rowSpan;
+        spanData[`${containerId}/colSpan`] = cell.colSpan;
+        spanData[`${containerId}/rowSpan`] = cell.rowSpan;
       }
     });
   });
