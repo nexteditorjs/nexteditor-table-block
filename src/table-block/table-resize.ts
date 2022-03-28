@@ -173,7 +173,7 @@ class TableResizeMouseHandler {
 
   // eslint-disable-next-line max-len
   private handleResizing = (drag: DragDrop<HTMLTableCellElement>, event: MouseEvent, elem: HTMLElement, deltaX: number, deltaY: number) => {
-    const x = event.x - drag.dragOffsetX;
+    const x = this.getMinX(event.x - drag.dragOffsetX);
     //
     const cell = this.draggingRefCell;
     assert(cell);
@@ -192,7 +192,7 @@ class TableResizeMouseHandler {
   private handleResizeEnd = (drag: DragDrop<HTMLTableCellElement>, event: MouseEvent, elem: HTMLElement, deltaX: number, deltaY: number) => {
     if (this.draggingRefCell) {
       const sizes = new Map<string, number>();
-      const x = event.x - drag.dragOffsetX;
+      const x = this.getMinX(event.x - drag.dragOffsetX);
       const cells = getEffectedCells(this.table, this.draggingRefCell);
       cells.forEach((cellData) => {
         const newWidth = this.calCellNewSize(cellData, x);
@@ -215,10 +215,10 @@ class TableResizeMouseHandler {
     const cellRect = cell.getBoundingClientRect();
     let newWidth = x - cellRect.left + GRIPPER_SIZE_HALF - CONTAINER_CELL_DELTA;
     const container = getChildContainerInCell(cell);
-    let minWidth = getContainerMinWidth(this.editor, container);
+    const minWidth = getContainerMinWidth(this.editor, container);
     if (minWidth) {
       // console.log('container min width', minWidth, newWidth);
-      minWidth += getTableCellPadding(this.table);
+      // minWidth += getTableCellPadding(this.table);
       // console.log('min-width', minWidth, newWidth);
       if (newWidth < minWidth) {
         newWidth = minWidth;
@@ -240,6 +240,36 @@ class TableResizeMouseHandler {
       }
     }
     return Math.round(newWidth);
+  }
+
+  private getMinX(x: number) {
+    //
+    const cell = this.draggingRefCell;
+    assert(cell);
+    //
+    let minX = x;
+    //
+    const cells = getEffectedCells(this.table, cell);
+    cells.forEach((cellData) => {
+      //
+      const cell = cellData.cell;
+      const cellRect = cell.getBoundingClientRect();
+      let newWidth = x - cellRect.left + GRIPPER_SIZE_HALF - CONTAINER_CELL_DELTA;
+      const container = getChildContainerInCell(cell);
+      const minWidth = getContainerMinWidth(this.editor, container);
+      // console.debug(`container min-width: ${minWidth}`);
+      if (minWidth) {
+        if (newWidth < minWidth) {
+          newWidth = minWidth;
+        }
+      }
+      //
+      const newX = cellRect.left + newWidth;
+      minX = Math.max(minX, newX);
+      //
+    });
+    //
+    return minX;
   }
 
   static register(editor: NextEditor, block: BlockElement) {
