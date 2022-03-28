@@ -1,11 +1,20 @@
-import { BlockElement, NextEditor, getContainerMinWidth, getContainerWidth } from '@nexteditorjs/nexteditor-core';
+import { BlockElement, NextEditor, getContainerMinWidth, getContainerWidth, ContainerElement } from '@nexteditorjs/nexteditor-core';
 import { getBlockTable } from './table-dom';
-import { TableGrid } from './table-grid';
+import { TableCell, TableGrid } from './table-grid';
 
 const TABLE_CELL_MIN_WIDTH = 40;
 const TABLE_COLUMN_MIN_WIDTH = TABLE_CELL_MIN_WIDTH; // add table border size
 
-function getRowMinWidth(editor: NextEditor, grid: TableGrid, row: number) {
+function getCellContainerMinWidth(editor: NextEditor, table: HTMLTableElement, cell: TableCell) {
+  const containerWidth = getContainerMinWidth(editor, cell.container);
+  if (containerWidth !== undefined) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    return containerWidth + getTableCellPadding(table);
+  }
+  return TABLE_COLUMN_MIN_WIDTH * cell.colSpan;
+}
+
+function getRowMinWidth(editor: NextEditor, table: HTMLTableElement, grid: TableGrid, row: number) {
   //
   let minWidth = 0;
   //
@@ -21,7 +30,7 @@ function getRowMinWidth(editor: NextEditor, grid: TableGrid, row: number) {
       continue;
     }
     //
-    let containerWidth = getContainerMinWidth(editor, cell.container) ?? (TABLE_COLUMN_MIN_WIDTH * cell.colSpan);
+    let containerWidth = getCellContainerMinWidth(editor, table, cell);
     //
     const containerStyleWidth = getContainerWidth(cell.container, { withPadding: true });
     if (containerStyleWidth) {
@@ -30,7 +39,8 @@ function getRowMinWidth(editor: NextEditor, grid: TableGrid, row: number) {
       }
     }
     //
-    minWidth += containerWidth;
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    minWidth += containerWidth + getTableCellPadding(table);
   }
   //
   return minWidth;
@@ -46,16 +56,17 @@ export function getTableCellPadding(table: HTMLTableElement) {
 }
 
 export function getTableMinWidth(editor: NextEditor, tableBlock: BlockElement) {
-  const grid = TableGrid.fromBlock(tableBlock);
+  const table = getBlockTable(tableBlock);
+  const grid = TableGrid.fromTable(table);
   //
   let minWidth = 0;
   for (let row = 0; row < grid.rowCount; row++) {
     //
-    minWidth = Math.max(minWidth, getRowMinWidth(editor, grid, row));
+    minWidth = Math.max(minWidth, getRowMinWidth(editor, table, grid, row));
     //
   }
   //
-  const outerWidth = getTableCellPadding(getBlockTable(tableBlock));
+  const outerWidth = getTableCellPadding(table);
   //
   return minWidth + outerWidth;
 }

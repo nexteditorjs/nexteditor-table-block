@@ -217,12 +217,15 @@ class TableResizeMouseHandler {
     const container = getChildContainerInCell(cell);
     let minWidth = getContainerMinWidth(this.editor, container);
     if (minWidth) {
+      // console.log('container min width', minWidth, newWidth);
       minWidth += getTableCellPadding(this.table);
-      // console.log('min-width', minWidth);
+      // console.log('min-width', minWidth, newWidth);
       if (newWidth < minWidth) {
         newWidth = minWidth;
       }
     }
+    //
+    // console.log('new width', newWidth);
     //
     const parentContainer = getParentContainer(this.block);
     const parentContainerWidth = getContainerWidth(parentContainer, { withPadding: false });
