@@ -5,6 +5,7 @@ import {
   createComplexBlockPosition, EditorComplexSelectionRange,
   NextContainerOptions, isTextKindBlock, createEmptyContainer, genId, trimChar,
   ConvertBlockResult,
+  getLogger,
 } from '@nexteditorjs/nexteditor-core';
 import { createBlockContent, handleDeleteBlock } from './create-content';
 import { DocTableBlockData } from './doc-table-data';
@@ -14,6 +15,8 @@ import { getClientRects } from './table-client-rects';
 import { getTableChildContainers, getContainerCell, getTableNextContainer } from './table-container';
 import { getChildContainerInCell, getBlockTable, getTableCells } from './table-dom';
 import { getTableMinWidth } from './table-size';
+
+const console = getLogger('table-block');
 
 function getBlockTextLength(block: BlockElement): number {
   return 1;

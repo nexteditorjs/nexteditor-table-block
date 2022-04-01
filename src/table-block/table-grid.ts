@@ -1,8 +1,10 @@
 /* eslint-disable max-classes-per-file */
-import { assert, ContainerElement, BlockElement, isContainer, isChildContainer, getContainerId, SimpleCache } from '@nexteditorjs/nexteditor-core';
+import { assert, ContainerElement, BlockElement, isContainer, isChildContainer, getContainerId, SimpleCache, getLogger } from '@nexteditorjs/nexteditor-core';
 import { table2Grid } from './table-data';
 import { getBlockTable, getChildContainerInCell, getTableKey } from './table-dom';
 import { DocTableCellData, DocTableRow, DocTableCellIndex } from './doc-table-grid';
+
+const console = getLogger('table-grid');
 
 const CACHE_EXPIRE_SECONDS = 60;
 
@@ -329,7 +331,7 @@ export class TableGrid {
     //
     const key = getTableKey(table);
     const grid = this.caches.getSync(key, () => {
-      console.debug('create table grid', table);
+      console.debug('create table grid');
       const grid = new TableGrid(table);
       return grid;
     });
