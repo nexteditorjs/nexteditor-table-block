@@ -1,6 +1,6 @@
 {
   "name": "@nexteditorjs/nexteditor-table-block",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "files": [
     "dist"
   ],
@@ -13,7 +13,7 @@
     "dist": "vite build && tsc --emitDeclarationOnly --project tsconfig.dist.json"
   },
   "dependencies": {
-    "@nexteditorjs/nexteditor-core": "^0.0.30",
+    "@nexteditorjs/nexteditor-core": "^0.0.31",
     "lodash.clonedeep": "^4.5.0",
     "blueimp-md5": "^2.19.0"
   },
@@ -23,7 +23,7 @@
     "typescript": "^4.5.4",
     "prettier": "^2.5.1",
     "vite": "^2.8.0",
-    "@nexteditorjs/nexteditor-input-handlers": "^0.0.30",
+    "@nexteditorjs/nexteditor-input-handlers": "^0.0.31",
     "vite-plugin-css-injected-by-js": "^1.1.0"
   }
 }
