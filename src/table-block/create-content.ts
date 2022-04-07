@@ -1,12 +1,12 @@
 import {
-  NextEditor, assert, createElement, addClass, ContainerElement, BlockElement, DocBlock, BlockContentElement, createBlockContentElement, setContainerWidth,
+  NextEditor, assert, createElement, addClass, ContainerElement, BlockElement, DocBlock, BlockContentElement, createBlockContentElement, setContainerWidth, BlockPath, getContainerId,
 } from '@nexteditorjs/nexteditor-core';
 import { DocTableGrid } from './doc-table-grid';
 import { DocTableBlockData } from './doc-table-data';
 import { bindTableResizeEvent, unbindTableResizeEvent } from './table-resize';
 
 //
-function createTable(editor: NextEditor, tableData: DocTableBlockData) {
+function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlockData) {
   const grid = new DocTableGrid(tableData);
   //
   const rows = tableData.rows;
@@ -34,7 +34,7 @@ function createTable(editor: NextEditor, tableData: DocTableBlockData) {
           cellElem.rowSpan = cell.rowSpan;
         }
         //
-        const container = editor.createChildContainer(cellElem, subContainerId);
+        const container = editor.createChildContainer(path, cellElem, subContainerId);
         const width = tableData[`${subContainerId}/width`];
         if (width && typeof width === 'number') {
           setContainerWidth(container, width);
@@ -69,12 +69,14 @@ function createTable(editor: NextEditor, tableData: DocTableBlockData) {
   return table;
 }
 
-export function createBlockContent(editor: NextEditor, container: ContainerElement, blockIndex: number, blockElement: BlockElement, blockData: DocBlock): BlockContentElement {
+export function createBlockContent(editor: NextEditor, path: BlockPath, container: ContainerElement, blockIndex: number, blockElement: BlockElement, blockData: DocBlock): BlockContentElement {
   assert(blockData.type === 'table', 'not table data');
+  assert(getContainerId(container) === path[path.length - 1].containerId, 'invalid path');
+  assert(blockIndex === path[path.length - 1].blockIndex, 'invalid path');
   const tableData = blockData as DocTableBlockData;
   //
   const content = createBlockContentElement(blockElement, 'div');
-  const table = createTable(editor, tableData);
+  const table = createTable(editor, path, tableData);
   content.appendChild(table);
   //
   bindTableResizeEvent(editor, blockElement);
