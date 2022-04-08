@@ -3,11 +3,14 @@ import {
 } from '@nexteditorjs/nexteditor-core';
 import { DocTableGrid } from './doc-table-grid';
 import { DocTableBlockData } from './doc-table-data';
-import { bindTableResizeEvent, unbindTableResizeEvent } from './table-resize';
+import { bindTableResizeEvent, TableResizeCleaner, unbindTableResizeEvent } from './table-resize';
 
 //
 function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlockData) {
   const grid = new DocTableGrid(tableData);
+
+  //
+  editor.addCustom('table-event-cleaner', (editor) => new TableResizeCleaner(editor));
   //
   const rows = tableData.rows;
   const cols = tableData.cols;

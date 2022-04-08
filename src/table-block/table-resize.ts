@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import {
   assert, BlockElement, createElement, getBlockTools, NextEditor,
   DragDrop, DragDropOptions, registerDragDrop, getContainerMinWidth,
@@ -5,7 +6,6 @@ import {
 } from '@nexteditorjs/nexteditor-core';
 import { getBlockTable, getChildContainerInCell } from './table-dom';
 import { TableCell, TableGrid } from './table-grid';
-import { getTableCellPadding } from './table-size';
 
 const GRIPPER_SIZE = 7;
 const GRIPPER_SIZE_HALF = (GRIPPER_SIZE - 1) / 2;
@@ -111,7 +111,7 @@ function changeContainerSize(editor: NextEditor, block: BlockElement, sizes: Map
 }
 
 class TableResizeMouseHandler {
-  static handlers = new WeakMap<BlockElement, TableResizeMouseHandler>();
+  static handlers = new Map<BlockElement, TableResizeMouseHandler>();
 
   //
   private table: HTMLTableElement;
@@ -285,6 +285,15 @@ class TableResizeMouseHandler {
       TableResizeMouseHandler.handlers.delete(block);
     }
   }
+
+  static unregisterEditor(editor: NextEditor) {
+    TableResizeMouseHandler.handlers.forEach((handler) => {
+      if (handler.editor === editor) {
+        handler.unbindEvents();
+        TableResizeMouseHandler.handlers.delete(handler.block);
+      }
+    });
+  }
 }
 
 export function bindTableResizeEvent(editor: NextEditor, block: BlockElement) {
@@ -293,4 +302,14 @@ export function bindTableResizeEvent(editor: NextEditor, block: BlockElement) {
 
 export function unbindTableResizeEvent(editor: NextEditor, block: BlockElement) {
   TableResizeMouseHandler.unregister(editor, block);
+}
+
+export class TableResizeCleaner {
+  constructor(private editor: NextEditor) {
+
+  }
+
+  destroy() {
+    TableResizeMouseHandler.unregisterEditor(this.editor);
+  }
 }
