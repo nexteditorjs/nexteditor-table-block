@@ -2,10 +2,12 @@
 import {
   assert, BlockElement, createElement, getBlockTools, NextEditor,
   DragDrop, DragDropOptions, registerDragDrop, getContainerMinWidth,
-  getParentContainer, getContainerWidth, DocBlock, setContainerWidth,
+  getParentContainer, getContainerWidth, DocBlock, setContainerWidth, getLogger,
 } from '@nexteditorjs/nexteditor-core';
 import { getBlockTable, getChildContainerInCell } from './table-dom';
 import { TableCell, TableGrid } from './table-grid';
+
+const logger = getLogger('table-resize');
 
 const GRIPPER_SIZE = 7;
 const GRIPPER_SIZE_HALF = (GRIPPER_SIZE - 1) / 2;
@@ -31,7 +33,7 @@ function getCellFromRightBorder(table: HTMLTableElement, x: number, y: number) {
 }
 
 function getCellsToColumn(table: HTMLTableElement, colIndex: number): TableCell[] {
-  assert(colIndex >= 0, `invalid column index: ${colIndex}`);
+  assert(logger, colIndex >= 0, `invalid column index: ${colIndex}`);
   const grid = TableGrid.fromTable(table);
   const cells = grid.getColumnRealCells(colIndex).filter((cell) => {
     const accept = cell.col + cell.colSpan === colIndex + 1;
@@ -52,7 +54,7 @@ function getExistsResizeGripper(block: BlockElement) {
 
 function createResizeGripper(block: BlockElement) {
   const exists = getExistsResizeGripper(block);
-  assert(!exists, 'resize gripper has already exists');
+  assert(logger, !exists, 'resize gripper has already exists');
   const tools = getBlockTools(block);
   const gripper = createElement('div', ['table-resize-gripper'], tools);
   createElement('div', ['table-resize-gripper-indicator'], gripper);
@@ -176,7 +178,7 @@ class TableResizeMouseHandler {
     const x = this.getMinX(event.x - drag.dragOffsetX);
     //
     const cell = this.draggingRefCell;
-    assert(cell);
+    assert(logger, cell, 'no dragging cell');
     //
     const cells = getEffectedCells(this.table, cell);
     cells.forEach((cellData) => {
@@ -245,7 +247,7 @@ class TableResizeMouseHandler {
   private getMinX(x: number) {
     //
     const cell = this.draggingRefCell;
-    assert(cell);
+    assert(logger, cell, 'no dragging cell');
     //
     let minX = x;
     //

@@ -1,15 +1,17 @@
-import { assert, BlockElement, createBlockSimpleRange, createEmptyContainer, DocBlockAttributes, getBlockType, NextEditor, SelectionRange } from '@nexteditorjs/nexteditor-core';
+import { assert, BlockElement, createBlockSimpleRange, createEmptyContainer, DocBlockAttributes, getBlockType, getLogger, NextEditor, SelectionRange } from '@nexteditorjs/nexteditor-core';
 import cloneDeep from 'lodash.clonedeep';
 import { DocTableCellIndex } from '../table-block/doc-table-grid';
 import { TableGrid } from '../table-block/table-grid';
 import { getRangeDetails } from './table-range';
 
+const logger = getLogger('split-cell');
+
 export function splitCell(editor: NextEditor, block: BlockElement, index: DocTableCellIndex) {
   //
   const grid = TableGrid.fromBlock(block);
   const cellData = grid.getRealCell(index);
-  assert(!cellData.virtual, 'should not split virtual cell');
-  assert(cellData.colSpan > 1 || cellData.rowSpan > 1, 'cell does not has span data');
+  assert(logger, !cellData.virtual, 'should not split virtual cell');
+  assert(logger, cellData.colSpan > 1 || cellData.rowSpan > 1, 'cell does not has span data');
   //
   const virtualCellContainers: string[][] = [];
   for (let row = 0; row < grid.rowCount; row++) {
@@ -60,7 +62,7 @@ export function splitCell(editor: NextEditor, block: BlockElement, index: DocTab
   //
   const blocks = editor.getChildContainerData(cellData.containerId);
   const focusedBlock = blocks[0];
-  assert(focusedBlock, 'no child block');
+  assert(logger, focusedBlock, 'no child block');
   const newRange = createBlockSimpleRange(editor, focusedBlock.id, 0);
   editor.updateBlockData(block, newData, newRange);
 }

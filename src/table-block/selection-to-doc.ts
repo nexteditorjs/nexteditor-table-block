@@ -1,10 +1,12 @@
 import {
   assert, blockToDoc, createComplexBlockPosition,
   DocBlock, DocBlockAttributes, DocObject,
-  genId, getBlockType, getChildBlocks, mergeDocs,
+  genId, getBlockType, getChildBlocks, getLogger, mergeDocs,
   NextEditor, SelectedBlock,
 } from '@nexteditorjs/nexteditor-core';
 import { TableGrid } from './table-grid';
+
+const logger = getLogger('table-selection-to-doc');
 
 function pickContainerData(blockData: DocBlock, containerId: string) {
   const ret: DocBlockAttributes = {};
@@ -20,12 +22,12 @@ export function selectionToDoc(editor: NextEditor, selectedBlock: SelectedBlock)
   //
   const { start, end, block } = selectedBlock;
   const blockType = getBlockType(block);
-  assert(blockType === 'table', `invalid block type: ${blockType}`);
+  assert(logger, blockType === 'table', `invalid block type: ${blockType}`);
   const blockData = editor.getBlockData(block);
 
   if (start.isSimple() && end.isSimple()) {
     const children = blockData.children;
-    assert(children, 'no table children');
+    assert(logger, children, 'no table children');
     const first = children[0];
     const last = children[children.length - 1];
     const start = createComplexBlockPosition(block, first);
@@ -33,7 +35,7 @@ export function selectionToDoc(editor: NextEditor, selectedBlock: SelectedBlock)
     return selectionToDoc(editor, { block: selectedBlock.block, start, end });
   }
   //
-  assert(!start.isSimple() && !end.isSimple(), 'invalid block pos type');
+  assert(logger, !start.isSimple() && !end.isSimple(), 'invalid block pos type');
   //
   const grid = TableGrid.fromBlock(block);
   const startCell = grid.getCellByContainerId(start.childContainerId);

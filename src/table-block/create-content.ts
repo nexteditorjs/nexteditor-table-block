@@ -1,10 +1,11 @@
 import {
-  NextEditor, assert, createElement, addClass, ContainerElement, BlockElement, DocBlock, BlockContentElement, createBlockContentElement, setContainerWidth, BlockPath, getContainerId,
+  NextEditor, assert, createElement, addClass, ContainerElement, BlockElement, DocBlock, BlockContentElement, createBlockContentElement, setContainerWidth, BlockPath, getContainerId, getLogger,
 } from '@nexteditorjs/nexteditor-core';
 import { DocTableGrid } from './doc-table-grid';
 import { DocTableBlockData } from './doc-table-data';
 import { bindTableResizeEvent, TableResizeCleaner, unbindTableResizeEvent } from './table-resize';
 
+const logger = getLogger('create-content');
 //
 function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlockData) {
   const grid = new DocTableGrid(tableData);
@@ -15,9 +16,9 @@ function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlo
   const rows = tableData.rows;
   const cols = tableData.cols;
   //
-  assert(rows >= 1, `invalid rows: ${rows}`);
-  assert(cols >= 1, `invalid cols: ${cols}`);
-  assert(tableData.children, 'no table children');
+  assert(logger, rows >= 1, `invalid rows: ${rows}`);
+  assert(logger, cols >= 1, `invalid cols: ${cols}`);
+  assert(logger, tableData.children, 'no table children');
   const table = createElement('table', [], null);
   const tableBody = createElement('tbody', [], table);
   //
@@ -45,11 +46,11 @@ function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlo
         //
         containerIndex += 1;
       } else {
-        assert(cell.colSpan > 1 || cell.rowSpan > 1);
+        assert(logger, cell.colSpan > 1 || cell.rowSpan > 1, 'virtual cell should have colSpan or rowSpan');
       }
     }
   }
-  assert(containerIndex === tableData.children.length);
+  assert(logger, containerIndex === tableData.children.length, 'container count mismatch');
   //
   if (tableData.noBorder) {
     addClass(table, 'no-border');
@@ -73,9 +74,9 @@ function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlo
 }
 
 export function createBlockContent(editor: NextEditor, path: BlockPath, container: ContainerElement, blockIndex: number, blockElement: BlockElement, blockData: DocBlock): BlockContentElement {
-  assert(blockData.type === 'table', 'not table data');
-  assert(getContainerId(container) === path[path.length - 1].containerId, 'invalid path');
-  assert(blockIndex === path[path.length - 1].blockIndex, 'invalid path');
+  assert(logger, blockData.type === 'table', 'not table data');
+  assert(logger, getContainerId(container) === path[path.length - 1].containerId, 'invalid path');
+  assert(logger, blockIndex === path[path.length - 1].blockIndex, 'invalid path');
   const tableData = blockData as DocTableBlockData;
   //
   const content = createBlockContentElement(blockElement, 'div');

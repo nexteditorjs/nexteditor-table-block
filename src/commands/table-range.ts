@@ -1,18 +1,20 @@
-import { assert, getBlockType, SelectionRange } from '@nexteditorjs/nexteditor-core';
+import { assert, getBlockType, getLogger, SelectionRange } from '@nexteditorjs/nexteditor-core';
 import { getBlockTable } from '../table-block/table-dom';
 import { TableGrid } from '../table-block/table-grid';
 
+const logger = getLogger('table-range');
+
 export function getRangeDetails(range: SelectionRange) {
   //
-  assert(!range.isSimple(), 'must be complex selection range');
+  assert(logger, !range.isSimple(), 'must be complex selection range');
   const { start, end } = range;
-  assert(!start.isSimple(), 'invalid start pos type');
-  assert(!end.isSimple(), 'invalid end pos type');
+  assert(logger, !start.isSimple(), 'invalid start pos type');
+  assert(logger, !end.isSimple(), 'invalid end pos type');
   //
   const editor = range.getEditor();
-  assert(start.blockId === end.blockId, 'invalid range, not same block');
+  assert(logger, start.blockId === end.blockId, 'invalid range, not same block');
   const block = editor.getBlockById(start.blockId);
-  assert(getBlockType(block) === 'table');
+  assert(logger, getBlockType(block) === 'table', 'invalid block type, not a table block');
   //
   const table = getBlockTable(block);
   const grid = TableGrid.fromTable(table);

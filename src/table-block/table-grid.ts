@@ -4,7 +4,7 @@ import { table2Grid } from './table-data';
 import { getBlockTable, getChildContainerInCell, getTableKey } from './table-dom';
 import { DocTableCellData, DocTableRow, DocTableCellIndex } from './doc-table-grid';
 
-const console = getLogger('table-grid');
+const logger = getLogger('table-grid');
 
 const CACHE_EXPIRE_SECONDS = 60;
 
@@ -36,16 +36,16 @@ export class TableCell implements DocTableCellData {
   get cell(): HTMLTableCellElement {
     const container = this.container;
     const cell = container.closest('td') as HTMLTableCellElement;
-    assert(cell, 'no parent cell for child container');
+    assert(logger, cell, 'no parent cell for child container');
     return cell;
   }
 
   get container(): ContainerElement {
     const containers = this.table.querySelectorAll(`[data-container-id=${this.containerId}]`);
-    assert(containers.length === 1);
-    assert(isContainer(containers[0]));
+    assert(logger, containers.length === 1, 'containers !== 1');
+    assert(logger, isContainer(containers[0]), 'not a container');
     const container = containers[0] as ContainerElement;
-    assert(isChildContainer(container));
+    assert(logger, isChildContainer(container), 'not a child container');
     return container;
   }
 }
@@ -64,7 +64,7 @@ export class TableRow {
   }
 
   getCell(col: number): TableCell {
-    assert(col < this._cells.length);
+    assert(logger, col < this._cells.length, 'get cell, invalid col');
     return this._cells[col];
   }
 
@@ -90,7 +90,7 @@ export class TableGrid {
     });
     const colCount = this.colCount;
     this._rows.forEach((row) => {
-      assert(row.cells.length === colCount);
+      assert(logger, row.cells.length === colCount, 'row.cells.length !== colCount');
     });
   }
 
@@ -102,7 +102,7 @@ export class TableGrid {
     if (this._rows.length === 0) {
       return 0;
     }
-    assert(this.rowCount > 0);
+    assert(logger, this.rowCount > 0, 'rowCount <= 0');
     return this.getRow(0).cells.length;
   }
 
@@ -112,7 +112,7 @@ export class TableGrid {
 
   getCell(cellIndex: DocTableCellIndex): TableCell {
     const row = this.getRow(cellIndex.row);
-    assert(row);
+    assert(logger, row, 'no row');
     return row.getCell(cellIndex.col);
   }
 
@@ -131,7 +131,7 @@ export class TableGrid {
   }
 
   getColumnCells(colIndex: number): TableCell[] {
-    assert(colIndex >= 0 && colIndex < this.colCount);
+    assert(logger, colIndex >= 0 && colIndex < this.colCount, 'colIndex out of range');
     const rowCount = this.rowCount;
     const ret = [];
     for (let row = 0; row < rowCount; row++) {
@@ -163,7 +163,7 @@ export class TableGrid {
   }
 
   getFirstSpannedCell(colIndex: number): TableCell | undefined {
-    assert(colIndex >= 0 && colIndex < this.colCount);
+    assert(logger, colIndex >= 0 && colIndex < this.colCount, 'colIndex out of range');
     const rowCount = this.rowCount;
     for (let row = 0; row < rowCount; row++) {
       const cell = this.getCell({ row, col: colIndex });
@@ -180,7 +180,7 @@ export class TableGrid {
       return cell;
     }
     const ret = this.getCellById(cell.containerId);
-    assert(!ret.virtual);
+    assert(logger, !ret.virtual, 'found a virtual cell');
     return ret;
   }
 
@@ -192,9 +192,9 @@ export class TableGrid {
       min = Math.min(cell.col, min);
       max = Math.max(cell.col + cell.colSpan - 1, max);
     });
-    assert(min <= max);
-    assert(min >= 0);
-    assert(max < this.colCount);
+    assert(logger, min <= max, 'min > max');
+    assert(logger, min >= 0, 'min < 0');
+    assert(logger, max < this.colCount, 'max >= colCount');
     return [min, max];
   }
 
@@ -206,9 +206,9 @@ export class TableGrid {
       min = Math.min(cell.row, min);
       max = Math.max(cell.row + cell.rowSpan - 1, max);
     });
-    assert(min <= max);
-    assert(min >= 0);
-    assert(max < this.rowCount);
+    assert(logger, min <= max, 'min > max');
+    assert(logger, min >= 0, 'min < 0');
+    assert(logger, max < this.rowCount, 'max >= rowCount');
     return [min, max];
   }
 
@@ -314,7 +314,7 @@ export class TableGrid {
   getCellById(cellId: string): TableCell {
     const cells = this.cells;
     const cell = cells.find((c) => c.containerId === cellId);
-    assert(cell);
+    assert(logger, cell, 'cell not found');
     return cell;
   }
 
@@ -331,7 +331,7 @@ export class TableGrid {
     //
     const key = getTableKey(table);
     const grid = this.caches.getSync(key, () => {
-      console.debug('create table grid');
+      logger.debug('create table grid');
       const grid = new TableGrid(table);
       return grid;
     });

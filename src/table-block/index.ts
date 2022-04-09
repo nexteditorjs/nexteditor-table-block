@@ -16,7 +16,7 @@ import { getTableChildContainers, getContainerCell, getTableNextContainer } from
 import { getChildContainerInCell, getBlockTable, getTableCells } from './table-dom';
 import { getTableMinWidth } from './table-size';
 
-const console = getLogger('table-block');
+const logger = getLogger('table-block');
 
 function getBlockTextLength(block: BlockElement): number {
   return 1;
@@ -64,19 +64,19 @@ function getCaretRect(block: BlockElement, pos: SimpleBlockPosition): DOMRect {
 function updateSelection(editor: NextEditor, block: BlockElement, from: BlockPosition, to: BlockPosition): void {
   //
   if (from.isSimple()) {
-    assert(to.isSimple(), 'from is simple position but to is not simple position');
+    assert(logger, to.isSimple(), 'from is simple position but to is not simple position');
     //
-    console.debug('full select table');
+    logger.debug('full select table');
     addClass(block, 'full-selected');
     //
     return;
   }
   //
-  assert(!to.isSimple(), 'from is complex position but end is simple position');
+  assert(logger, !to.isSimple(), 'from is complex position but end is simple position');
   //
   const f = from as ComplexBlockPosition;
   const t = to as ComplexBlockPosition;
-  assert(f.blockId === t.blockId, 'only allow update one table selection');
+  assert(logger, f.blockId === t.blockId, 'only allow update one table selection');
   //
   const childContainers = getEditorSelectedContainers(editor, f, t);
   childContainers.forEach((c) => {

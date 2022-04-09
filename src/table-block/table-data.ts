@@ -1,20 +1,22 @@
 import {
-  assert, isContainer, isChildContainer, ContainerElement, getParentBlock, getContainerId, getBlockId, getBlockType,
+  assert, isContainer, isChildContainer, ContainerElement, getParentBlock, getContainerId, getBlockId, getBlockType, getLogger,
 } from '@nexteditorjs/nexteditor-core';
 import { DocTableBlockData } from './doc-table-data';
 import { DocTableGrid } from './doc-table-grid';
 
+const logger = getLogger('table-data');
+
 function getCellChildContainer(cell: HTMLTableCellElement) {
   const container = cell.firstElementChild;
-  assert(container, 'no child element for cell');
-  assert(isContainer(container), 'cell first child is not a container');
-  assert(isChildContainer(container as ContainerElement), 'cell first child is not a container');
+  assert(logger, container, 'no child element for cell');
+  assert(logger, isContainer(container), 'cell first child is not a container');
+  assert(logger, isChildContainer(container as ContainerElement), 'cell first child is not a container');
   return container as ContainerElement;
 }
 
 export function table2Data(table: HTMLTableElement): DocTableBlockData {
   const block = getParentBlock(table);
-  assert(block);
+  assert(logger, block, 'no parent block for table');
   //
   const cellIds: string[] = [];
   const spanData: {

@@ -1,10 +1,12 @@
-import { BlockElement, getBlockContent, assert, ContainerElement, getContainerId } from '@nexteditorjs/nexteditor-core';
+import { BlockElement, getBlockContent, assert, ContainerElement, getContainerId, getLogger } from '@nexteditorjs/nexteditor-core';
 import md5 from 'blueimp-md5';
+
+const logger = getLogger('table-dom');
 
 export function getBlockTable(block: BlockElement): HTMLTableElement {
   const content = getBlockContent(block);
   const table = content.firstElementChild;
-  assert(table instanceof HTMLTableElement);
+  assert(logger, table instanceof HTMLTableElement, 'invalid table');
   return table;
 }
 export function getTableCells(table: HTMLTableElement): HTMLTableCellElement[] {
@@ -17,7 +19,7 @@ export function getTableCells(table: HTMLTableElement): HTMLTableCellElement[] {
 
 export function getChildContainerInCell(cell: HTMLTableCellElement): ContainerElement {
   const container = cell.querySelector(':scope div[data-type=editor-container]');
-  assert(container, 'no child container in cell');
+  assert(logger, container, 'no child container in cell');
   return container as ContainerElement;
 }
 

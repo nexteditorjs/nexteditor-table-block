@@ -1,11 +1,13 @@
 import {
   assert, BlockElement, containerToDoc, createBlockSimpleRange, DocBlockAttributes, getBlockType, getChildBlockCount,
-  getContainerId, NextEditor, SelectionRange,
+  getContainerId, getLogger, NextEditor, SelectionRange,
 } from '@nexteditorjs/nexteditor-core';
 import cloneDeep from 'lodash.clonedeep';
 import { TableGrid } from '../table-block/table-grid';
 import { splitRangeCells } from './split-cell';
 import { getRangeDetails } from './table-range';
+
+const logger = getLogger('merge-cells');
 
 export function canMergeCells(editor: NextEditor, block: BlockElement, range: SelectionRange) {
   if (range.isSimple()) return false;
@@ -33,7 +35,7 @@ export function mergeRangeCells(range: SelectionRange) {
   splitRangeCells(range);
   //
   const blockData = cloneDeep(editor.getBlockData(block));
-  assert(blockData.children, 'no table children');
+  assert(logger, blockData.children, 'no table children');
   //
   const grid = TableGrid.fromTable(table);
   //
@@ -41,12 +43,12 @@ export function mergeRangeCells(range: SelectionRange) {
   for (let row = startRow; row <= endRow; row++) {
     for (let col = startCol; col <= endCol; col++) {
       const cellData = grid.getCell({ row, col });
-      assert(!cellData.virtual);
+      assert(logger, !cellData.virtual, 'cell is virtual');
       selectedCells.push(cellData);
     }
   }
   //
-  assert(selectedCells.length > 0);
+  assert(logger, selectedCells.length > 0, 'no selected cells');
   const firstCellData = selectedCells[0];
   const lastCells = selectedCells.slice(1);
   const firstCellContainer = grid.getCellByContainerId(firstCellData.containerId).container;
@@ -67,9 +69,9 @@ export function mergeRangeCells(range: SelectionRange) {
   blockData[`${firstCellContainerId}/rowSpan`] = rowSpan;
   //
   deletedContainers.forEach((deletedContainerId) => {
-    assert(blockData.children, 'no table children');
+    assert(logger, blockData.children, 'no table children');
     const containerIndex = blockData.children.indexOf(deletedContainerId);
-    assert(containerIndex > 0, 'no deleted container');
+    assert(logger, containerIndex > 0, 'no deleted container');
     blockData.children.splice(containerIndex, 1);
   });
   //
@@ -78,7 +80,7 @@ export function mergeRangeCells(range: SelectionRange) {
   delete newBlockData.type;
   const blocks = editor.getChildContainerData(firstCellContainerId);
   const focusedBlock = blocks[0];
-  assert(focusedBlock, 'no child block');
+  assert(logger, focusedBlock, 'no child block');
   const newRange = createBlockSimpleRange(editor, focusedBlock.id, 0);
   editor.updateBlockData(block, newBlockData, newRange);
   editor.deleteChildContainers(deletedContainers);

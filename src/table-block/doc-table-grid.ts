@@ -1,6 +1,8 @@
 /* eslint-disable max-classes-per-file */
-import { assert } from '@nexteditorjs/nexteditor-core';
+import { assert, getLogger } from '@nexteditorjs/nexteditor-core';
 import { DocTableBlockData } from './doc-table-data';
+
+const logger = getLogger('doc-table-grid');
 
 export interface DocTableCellData {
   containerId: string;
@@ -25,19 +27,19 @@ export class DocTableRow {
   }
 
   setCell(col: number, cell: DocTableCellData) {
-    assert(col >= 0 && col < this.cols());
+    assert(logger, col >= 0 && col < this.cols(), `set cell, invalid col: ${col}`);
     this._cells[col] = cell;
   }
 
   getCell(col: number): DocTableCellData {
-    assert(col >= 0 && col < this.cols());
+    assert(logger, col >= 0 && col < this.cols(), `get cell, invalid col: ${col}`);
     const cell = this._cells[col];
-    assert(cell);
+    assert(logger, cell, 'get cell, no cell');
     return cell;
   }
 
   getCellAllowEmpty(col: number): DocTableCellData | undefined {
-    assert(col >= 0 && col < this.cols());
+    assert(logger, col >= 0 && col < this.cols(), `get cell, invalid col, ${col}`);
     const cell = this._cells[col];
     return cell;
   }
@@ -104,7 +106,7 @@ export class DocTableGrid {
 
   fillGrid() {
     const children = this._data.children;
-    assert(children);
+    assert(logger, children, 'no children');
     //
     let col = 0;
     let row = 0;
@@ -127,7 +129,7 @@ export class DocTableGrid {
       //
       const next = this.getNextEmptyCell(col, row);
       if (!next) {
-        assert(index === children.length - 1, `invalid table data, no next empty cell: ${JSON.stringify(this._data)}`);
+        assert(logger, index === children.length - 1, `invalid table data, no next empty cell: ${JSON.stringify(this._data)}`);
       } else {
         col = next.col;
         row = next.row;
@@ -137,8 +139,8 @@ export class DocTableGrid {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     this._rows.forEach((row) => {
       row.forEach((cell) => {
-        assert(cell);
-        assert(cell.containerId);
+        assert(logger, cell, 'no cell');
+        assert(logger, cell.containerId, 'no containerId');
       });
     });
   }
@@ -146,15 +148,15 @@ export class DocTableGrid {
   getCell(index: DocTableCellIndex): DocTableCellData {
     const { col, row } = index;
     const r = this._rows[row];
-    assert(r);
+    assert(logger, r, `get cell, no row: ${row}`);
     const ret = r.getCell(col);
-    assert(ret);
+    assert(logger, ret, `get cell, no cell: ${col}`);
     return ret;
   }
 
   getRow(row: number): DocTableRow {
     const ret = this._rows[row];
-    assert(ret);
+    assert(logger, ret, `get row, no row: ${row}`);
     return ret;
   }
 

@@ -1,9 +1,11 @@
-import { BlockElement, assert, ContainerElement, MoveDirection, getContainerId, NextContainerOptions } from '@nexteditorjs/nexteditor-core';
+import { BlockElement, assert, ContainerElement, MoveDirection, getContainerId, NextContainerOptions, getLogger } from '@nexteditorjs/nexteditor-core';
 import { TableGrid } from './table-grid';
+
+const logger = getLogger('table-container');
 
 export function getContainerCell(container: ContainerElement): HTMLTableCellElement {
   const cell = container.closest('td') as HTMLTableCellElement;
-  assert(cell, 'no parent cell for a table cell container');
+  assert(logger, cell, 'no parent cell for a table cell container');
   return cell;
 }
 
@@ -39,7 +41,7 @@ export function getTableNextContainer(tableBlock: BlockElement, childContainer: 
     //
     const containers = grid.getAllContainers();
     const index = containers.indexOf(childContainer);
-    assert(index >= 0, 'not a valid child container');
+    assert(logger, index >= 0, 'not a valid child container');
     if (index === 0) {
       return null;
     }
@@ -58,7 +60,7 @@ export function getTableNextContainer(tableBlock: BlockElement, childContainer: 
     //
     const containers = grid.getAllContainers();
     const index = containers.indexOf(childContainer);
-    assert(index >= 0, 'not a valid child container');
+    assert(logger, index >= 0, 'not a valid child container');
     if (index === containers.length - 1) {
       return null;
     }
@@ -73,5 +75,5 @@ export function getTableNextContainer(tableBlock: BlockElement, childContainer: 
     return ret;
   }
   //
-  assert(false, `invalid navigation type: ${type}`);
+  assert(logger, false, `invalid navigation type: ${type}`);
 }
