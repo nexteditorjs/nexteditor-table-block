@@ -155,6 +155,7 @@ function convertFrom(editor: NextEditor, srcBlock: BlockElement): ConvertBlockRe
 const TableBlock: ComplexKindBlock = {
   blockType: 'table',
   blockKind: 'complex',
+  enableKeyboardSelect: true,
   createBlockContent,
   getBlockTextLength,
   getRangeFromPoint,
