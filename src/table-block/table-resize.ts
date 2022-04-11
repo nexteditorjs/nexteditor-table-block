@@ -110,6 +110,7 @@ function changeContainerSize(editor: NextEditor, block: BlockElement, sizes: Map
   //
   //
   editor.updateBlockData(block, newData);
+  editor.selection.updateSelection(null);
 }
 
 class TableResizeMouseHandler {
@@ -161,6 +162,9 @@ class TableResizeMouseHandler {
   }
 
   private handleMouseMove = (event: MouseEvent) => {
+    if (this.editor.selectionHandler.isSelecting() && !this.draggingRefCell) {
+      return;
+    }
     //
     if (this.draggingRefCell) {
       return;
