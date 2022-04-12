@@ -7,14 +7,14 @@ import {
   ConvertBlockResult,
   getLogger,
 } from '@nexteditorjs/nexteditor-core';
-import { createBlockContent, handleDeleteBlock } from './create-content';
+import { createBlockContent } from './create-content';
 import { DocTableBlockData } from './doc-table-data';
 import { getEditorSelectedContainers, getTableSelectedContainers } from './get-selected-containers';
 import { selectionToDoc } from './selection-to-doc';
 import { getClientRects } from './table-client-rects';
 import { getTableChildContainers, getContainerCell, getTableNextContainer } from './table-container';
 import { getChildContainerInCell, getBlockTable, getTableCells } from './table-dom';
-import { getTableMinWidth } from './table-size';
+import { getTableMinWidth } from './table-resize/table-size';
 
 const logger = getLogger('table-block');
 
@@ -168,7 +168,7 @@ const TableBlock: ComplexKindBlock = {
   getMinWidth,
   getSelectedContainers: getTableSelectedContainers,
   convertFrom,
-  handleDeleteBlock,
+  // handleDeleteBlock,
   getClientRects,
   selectionToDoc,
 };

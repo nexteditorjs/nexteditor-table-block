@@ -3,15 +3,13 @@ import {
 } from '@nexteditorjs/nexteditor-core';
 import { DocTableGrid } from './doc-table-grid';
 import { DocTableBlockData } from './doc-table-data';
-import { bindTableResizeEvent, TableResizeCleaner, unbindTableResizeEvent } from './table-resize';
+import { bindTableResizeEvent } from './table-resize/table-resize';
 
 const logger = getLogger('create-content');
 //
 function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlockData) {
   const grid = new DocTableGrid(tableData);
 
-  //
-  editor.addCustom('table-event-cleaner', (editor) => new TableResizeCleaner(editor));
   //
   const rows = tableData.rows;
   const cols = tableData.cols;
@@ -83,11 +81,7 @@ export function createBlockContent(editor: NextEditor, path: BlockPath, containe
   const table = createTable(editor, path, tableData);
   content.appendChild(table);
   //
-  bindTableResizeEvent(editor, blockElement);
+  bindTableResizeEvent(editor);
   //
   return content;
-}
-
-export function handleDeleteBlock(editor: NextEditor, block: BlockElement, local: boolean) {
-  unbindTableResizeEvent(editor, block);
 }

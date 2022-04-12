@@ -1,4 +1,4 @@
-import { BlockElement, getBlockContent, assert, ContainerElement, getContainerId, getLogger } from '@nexteditorjs/nexteditor-core';
+import { BlockElement, getBlockContent, assert, ContainerElement, getContainerId, getLogger, getBlockType } from '@nexteditorjs/nexteditor-core';
 import md5 from 'blueimp-md5';
 
 const logger = getLogger('table-dom');
@@ -33,4 +33,8 @@ export function getTableKey(table: HTMLTableElement): string {
   const ids = containers.map(getContainerId);
   const keys = ids.join();
   return md5(keys);
+}
+
+export function isTableBlock(block: BlockElement) {
+  return getBlockType(block) === 'table';
 }
