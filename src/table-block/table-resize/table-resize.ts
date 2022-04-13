@@ -125,7 +125,6 @@ class TableResizeMouseHandler {
   };
 }
 
-export function bindTableResizeEvent(editor: NextEditor) {
-  //
+export function handleTableResizeEvent(editor: NextEditor) {
   editor.addCustom('table-resize-mouse-handler', (editor) => new TableResizeMouseHandler(editor));
 }

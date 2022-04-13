@@ -13,15 +13,7 @@ export function splitCell(editor: NextEditor, block: BlockElement, index: DocTab
   assert(logger, !cellData.virtual, 'should not split virtual cell');
   assert(logger, cellData.colSpan > 1 || cellData.rowSpan > 1, 'cell does not has span data');
   //
-  const virtualCellContainers: string[][] = [];
-  for (let row = 0; row < grid.rowCount; row++) {
-    const rowContainerIds = [];
-    for (let col = 0; col < grid.colCount; col++) {
-      const cell = grid.getCell({ row, col });
-      rowContainerIds.push(cell.containerId);
-    }
-    virtualCellContainers.push(rowContainerIds);
-  }
+  const virtualCellContainers = grid.getVirtualCellContainersGrid();
   //
   for (let y = 0; y < cellData.rowSpan; y++) {
     for (let x = 0; x < cellData.colSpan; x++) {
@@ -46,19 +38,7 @@ export function splitCell(editor: NextEditor, block: BlockElement, index: DocTab
   delete newData[`${cellData.containerId}/colSpan`];
   delete newData[`${cellData.containerId}/rowSpan`];
   //
-  const virtualCellContainersToChildren = (containerIds: string[][]) => {
-    const ret: string[] = [];
-    containerIds.forEach((rowContainerIds) => {
-      rowContainerIds.forEach((containerId) => {
-        if (ret.indexOf(containerId) === -1) {
-          ret.push(containerId);
-        }
-      });
-    });
-    return ret;
-  };
-  //
-  newData.children = virtualCellContainersToChildren(virtualCellContainers);
+  newData.children = TableGrid.virtualCellContainersGridToChildren(virtualCellContainers);
   //
   const blocks = editor.getChildContainerData(cellData.containerId);
   const focusedBlock = blocks[0];
@@ -108,4 +88,35 @@ export function splitRangeCells(range: SelectionRange) {
   //
   splitCells(editor, block, indexes);
   return true;
+}
+
+export function splitColCells(editor: NextEditor, block: BlockElement, colIndex: number, options: { onlyVirtual: boolean }) {
+  let grid = TableGrid.fromBlock(block);
+  assert(logger, colIndex >= 0 && colIndex < grid.colCount, 'invalid colIndex');
+  //
+  const rowCount = grid.rowCount;
+  const onlyVirtual = options.onlyVirtual;
+  //
+  for (let row = 0; row < rowCount; row++) {
+    const cell = grid.getCell({ row, col: colIndex });
+    if (((!onlyVirtual) || cell.virtual) && cell.colSpan > 1) {
+      splitCell(editor, block, cell);
+      grid = TableGrid.fromBlock(block);
+    }
+  }
+}
+
+export function splitRowCells(editor: NextEditor, block: BlockElement, rowIndex: number, options: { onlyVirtual: boolean }) {
+  const onlyVirtual = options.onlyVirtual;
+  let grid = TableGrid.fromBlock(block);
+  assert(logger, rowIndex >= 0 && rowIndex < grid.rowCount, 'invalid rowIndex');
+  //
+  const colCount = grid.colCount;
+  for (let col = 0; col < colCount; col++) {
+    const cell = grid.getCell({ row: rowIndex, col });
+    if (((!onlyVirtual) || cell.virtual) && cell.rowSpan > 1) {
+      splitCell(editor, block, cell);
+      grid = TableGrid.fromBlock(block);
+    }
+  }
 }

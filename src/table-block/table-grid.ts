@@ -311,6 +311,32 @@ export class TableGrid {
     return ret;
   }
 
+  getVirtualCellContainersGrid(): string[][] {
+    const rows: string[][] = [];
+    for (let row = 0; row < this.rowCount; row++) {
+      const rowContainerIds = [];
+      for (let col = 0; col < this.colCount; col++) {
+        const cell = this.getCell({ row, col });
+        rowContainerIds.push(cell.containerId);
+      }
+      rows.push(rowContainerIds);
+    }
+    return rows;
+  }
+
+  static virtualCellContainersGridToChildren(virtualCellContainersGrid: string[][]): string[] {
+    const containerIds = virtualCellContainersGrid;
+    const ret: string[] = [];
+    containerIds.forEach((rowContainerIds) => {
+      rowContainerIds.forEach((containerId) => {
+        if (ret.indexOf(containerId) === -1) {
+          ret.push(containerId);
+        }
+      });
+    });
+    return ret;
+  }
+
   getCellById(cellId: string): TableCell {
     const cells = this.cells;
     const cell = cells.find((c) => c.containerId === cellId);
