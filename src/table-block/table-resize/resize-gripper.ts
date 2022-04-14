@@ -1,11 +1,13 @@
 import {
   assert, BlockElement, createElement, getBlockTools, NextEditor,
-  DocBlock, getLogger, getParentBlock,
+  DocBlock, getLogger,
 } from '@nexteditorjs/nexteditor-core';
-import { getBlockTable, isTableBlock } from '../table-dom';
+import { insertColumn } from '../../commands/insert-column';
+import { getBlockTable } from '../table-dom';
 import { TableCell, TableGrid } from '../table-grid';
+import { createInsertColumnButton } from '../ui/insert-column-button';
 
-const logger = getLogger('table-resize');
+const logger = getLogger('table-resize-gripper');
 
 export const GRIPPER_SIZE = 7;
 export const GRIPPER_SIZE_HALF = (GRIPPER_SIZE - 1) / 2;
@@ -54,17 +56,16 @@ export function createResizeGripper(block: BlockElement) {
   const exists = getExistsResizeGripper(block);
   assert(logger, !exists, 'resize gripper has already exists');
   const tools = getBlockTools(block);
-  const gripper = createElement('div', ['table-resize-gripper'], tools);
+  const gripper = createElement('div', ['table-resize-gripper', 'table-indicator'], tools);
+  createInsertColumnButton(gripper);
   createElement('div', ['table-resize-gripper-indicator'], gripper);
   return gripper;
 }
 
-export function updateResizeGripper(block: BlockElement, cell: HTMLTableCellElement) {
+export function updateResizeGripper(editor: NextEditor, block: BlockElement, cell: HTMLTableCellElement) {
   let gripper = getExistsResizeGripper(block);
   if (!gripper) {
-    const tools = getBlockTools(block);
-    gripper = createElement('div', ['table-resize-gripper'], tools);
-    createElement('div', ['table-resize-gripper-indicator'], gripper);
+    gripper = createResizeGripper(block);
   }
   //
   const blockRect = block.getBoundingClientRect();
@@ -80,6 +81,21 @@ export function updateResizeGripper(block: BlockElement, cell: HTMLTableCellElem
   gripper.style.top = `${top}px`;
   gripper.style.height = `${height}px`;
   gripper.style.width = `${GRIPPER_SIZE}px`;
+  //
+  const button = gripper.querySelector('.table-insert-column-button') as HTMLDivElement;
+  assert(logger, button, 'button not found');
+  button.onclick = (event) => {
+    const grid = TableGrid.fromBlock(block);
+    const cellData = grid.getCellByCellElement(cell);
+    const colIndex = cellData.col;
+    insertColumn(editor, block, colIndex + cellData.colSpan);
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  //
+  button.onmousedown = (event) => {
+    event.stopPropagation();
+  };
 }
 
 export function getEffectedCells(table: HTMLTableElement, cell: HTMLTableCellElement) {
@@ -90,7 +106,7 @@ export function getEffectedCells(table: HTMLTableElement, cell: HTMLTableCellEle
   return cells;
 }
 
-export function removeResizeGripper(editor: NextEditor) {
+export function removeAllResizeGripper(editor: NextEditor) {
   editor.rootContainer.querySelectorAll('.table-resize-gripper').forEach((gripper) => {
     gripper.remove();
   });
@@ -107,25 +123,4 @@ export function changeContainerSize(editor: NextEditor, block: BlockElement, siz
   //
   editor.updateBlockData(block, newData);
   editor.selection.updateSelection(null);
-}
-
-export function tableBlockFromPoint(editor: NextEditor, ev: MouseEvent) {
-  const elem = document.elementFromPoint(ev.x, ev.y);
-  if (!elem) {
-    return null;
-  }
-  const block = getParentBlock(elem);
-  if (!block) {
-    removeResizeGripper(editor);
-    return null;
-  }
-  if (!editor.contains(block)) {
-    removeResizeGripper(editor);
-    return null;
-  }
-  if (!isTableBlock(block)) {
-    removeResizeGripper(editor);
-    return null;
-  }
-  return block;
 }

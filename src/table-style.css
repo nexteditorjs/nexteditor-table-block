@@ -1,3 +1,7 @@
+div[data-type=editor-block].table-block div[data-type=block-tools] .material-icons-outlined {
+  font-family: 'Material Icons Outlined';
+}
+
 div[data-type=editor-block].table-block div[data-type=block-tools] .table-resize-gripper {
   position: absolute;
   background-color: transparent;
@@ -12,6 +16,31 @@ div[data-type=editor-block].table-block div[data-type=block-tools] .table-resize
   height: 100%;
 }
 
+div[data-type=editor-block].table-block div[data-type=block-tools] .table-insert-column-indicator {
+  position: absolute;
+  background-color: transparent;
+  /* cursor: col-resize; */
+  padding: 0 2px;
+}
+
+div[data-type=editor-block].table-block div[data-type=block-tools] .table-insert-column-indicator> .table-insert-column-indicator-content {
+  pointer-events: none;
+  background-color:var(--primary-color);
+  width: 100%;
+  height: 100%;
+}
+
+div[data-type=editor-block].table-block div[data-type=block-tools] .table-resize-gripper .table-insert-column-button,
+div[data-type=editor-block].table-block div[data-type=block-tools] .table-insert-column-indicator .table-insert-column-button {
+  position: absolute;
+  background-color: var(--primary-color);
+  left: -9.5px;
+  top: -24px;
+  color: white;
+  padding-top: 2px;
+  /* width: 24px; */
+  /* height: 24px; */
+}
 
 /* table */
 div[data-type=editor-block].table-block > div[data-type=block-content] {
@@ -56,4 +85,31 @@ div[data-type=editor-block].table-block > div[data-type=block-content] > table t
 /* nested table */
 div[data-type=editor-block].table-block > div[data-type=block-content] > table td div[data-type=editor-block].table-block > div[data-type=block-content] > table {
   max-width: 100%;
+}
+
+.dropmarker{
+  width: 26px;
+  height: 26px;
+  position: relative;
+  border-radius: 50%;
+  background: #6ccddf;
+  line-height: 26px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+
+}
+
+.dropmarker::after {
+  content: '';
+  width: 0px;
+  height: 0px;
+  border: 10px transparent solid;
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-right: 10px solid transparent;
+  border-top: 15px solid var(--primary-color);;
+  border-left: 10px solid transparent;
 }
