@@ -2,10 +2,8 @@ import {
   assert, BlockElement, createElement, getBlockTools, NextEditor,
   DocBlock, getLogger,
 } from '@nexteditorjs/nexteditor-core';
-import { insertColumn } from '../../commands/insert-column';
 import { getBlockTable } from '../table-dom';
 import { TableCell, TableGrid } from '../table-grid';
-import { createInsertColumnButton } from '../ui/insert-column-button';
 
 const logger = getLogger('table-resize-gripper');
 
@@ -57,7 +55,6 @@ export function createResizeGripper(block: BlockElement) {
   assert(logger, !exists, 'resize gripper has already exists');
   const tools = getBlockTools(block);
   const gripper = createElement('div', ['table-resize-gripper', 'table-indicator'], tools);
-  createInsertColumnButton(gripper);
   createElement('div', ['table-resize-gripper-indicator'], gripper);
   return gripper;
 }
@@ -81,21 +78,6 @@ export function updateResizeGripper(editor: NextEditor, block: BlockElement, cel
   gripper.style.top = `${top}px`;
   gripper.style.height = `${height}px`;
   gripper.style.width = `${GRIPPER_SIZE}px`;
-  //
-  const button = gripper.querySelector('.table-insert-column-button') as HTMLDivElement;
-  assert(logger, button, 'button not found');
-  button.onclick = (event) => {
-    const grid = TableGrid.fromBlock(block);
-    const cellData = grid.getCellByCellElement(cell);
-    const colIndex = cellData.col;
-    insertColumn(editor, block, colIndex + cellData.colSpan);
-    event.preventDefault();
-    event.stopPropagation();
-  };
-  //
-  button.onmousedown = (event) => {
-    event.stopPropagation();
-  };
 }
 
 export function getEffectedCells(table: HTMLTableElement, cell: HTMLTableCellElement) {

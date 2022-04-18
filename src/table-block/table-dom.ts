@@ -1,4 +1,4 @@
-import { BlockElement, getBlockContent, assert, ContainerElement, getContainerId, getLogger, getBlockType } from '@nexteditorjs/nexteditor-core';
+import { BlockElement, getBlockContent, assert, ContainerElement, getContainerId, getLogger, getBlockType, getParentContainer, isRootContainer, getParentBlock } from '@nexteditorjs/nexteditor-core';
 import md5 from 'blueimp-md5';
 
 const logger = getLogger('table-dom');
@@ -37,4 +37,20 @@ export function getTableKey(table: HTMLTableElement): string {
 
 export function isTableBlock(block: BlockElement) {
   return getBlockType(block) === 'table';
+}
+
+export function getParentTableBlock(block: BlockElement): BlockElement | null {
+  if (isTableBlock(block)) {
+    return block;
+  }
+  const parentContainer = getParentContainer(block);
+  if (isRootContainer(parentContainer)) {
+    return null;
+  }
+  const parentBlock = getParentBlock(parentContainer);
+  assert(logger, parentBlock, 'no parent block');
+  if (isTableBlock(parentBlock)) {
+    return parentBlock;
+  }
+  return getParentTableBlock(parentBlock);
 }

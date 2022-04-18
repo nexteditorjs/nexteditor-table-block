@@ -37,6 +37,8 @@ export class TableResizeDragDrop implements DragDropOptions<TableResizeDragDropD
       setContainerWidth(cellData.container, newWidth);
     });
     //
+    this.editor.emit('blockNotify', this.editor, drag.data.block, 'resize', []);
+    //
     updateResizeGripper(this.editor, drag.data.block, draggingRefCell);
     //
     this.editor.selection.caret.update();

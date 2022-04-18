@@ -3,8 +3,9 @@ import {
 } from '@nexteditorjs/nexteditor-core';
 import { DocTableGrid } from './doc-table-grid';
 import { DocTableBlockData } from './doc-table-data';
-import { handleTableMouseEvent } from './table-actions/mouse-events';
+import { handleTableResizeMouseEvent } from './table-resize/table-resize-events';
 import { handlePasteInTableEvent } from './paste';
+import { handleTableBorderBar } from './border-bar/table-border-bar-handler';
 
 const logger = getLogger('create-content');
 //
@@ -82,8 +83,9 @@ export function createBlockContent(editor: NextEditor, path: BlockPath, containe
   const table = createTable(editor, path, tableData);
   content.appendChild(table);
   //
-  handleTableMouseEvent(editor);
+  handleTableResizeMouseEvent(editor);
   handlePasteInTableEvent(editor);
+  handleTableBorderBar(editor);
   //
   return content;
 }

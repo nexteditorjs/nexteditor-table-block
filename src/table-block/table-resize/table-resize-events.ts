@@ -1,17 +1,15 @@
 import {
   BlockElement, NextEditor,
-  registerDragDrop, getLogger, isChildNode,
+  registerDragDrop, getLogger,
 } from '@nexteditorjs/nexteditor-core';
-import { removeAllInsertColumnIndicators, removeInsertColumnIndicator, updateInsertColumnIndicator } from '../insert-column/insert-column-indicator';
 import { getBlockTable } from '../table-dom';
-import { TableResizeDragDrop } from '../table-resize/resize-drag-drop';
+import { TableResizeDragDrop } from './resize-drag-drop';
 import {
   createResizeGripper, editorHasExistsResizeGripper, getCellFromRightBorder,
-  getExistsResizeGripper, GRIPPER_SIZE_HALF, removeAllResizeGripper,
+  getExistsResizeGripper, removeAllResizeGripper,
   updateResizeGripper,
-} from '../table-resize/resize-gripper';
-import { removeAllIndicators } from './indicators';
-import { tableBlockFromPoint } from './table-from-point';
+} from './resize-gripper';
+import { tableBlockFromPoint } from '../table-actions/table-from-point';
 
 const logger = getLogger('table-resize');
 
@@ -31,8 +29,6 @@ class TableMouseEventHandler {
     const table = getBlockTable(block);
     const draggingRefCell = getCellFromRightBorder(table, x, y);
     if (draggingRefCell) {
-      //
-      removeAllInsertColumnIndicators(this.editor);
       //
       const exists = getExistsResizeGripper(block);
       if (!exists) {
@@ -55,17 +51,6 @@ class TableMouseEventHandler {
     }
   }
 
-  private updateFirstColumnInsertIndicator(block: BlockElement, x: number, y: number) {
-    const table = getBlockTable(block);
-
-    const rect = table.getBoundingClientRect();
-    if (x < rect.left - GRIPPER_SIZE_HALF || x > rect.left + GRIPPER_SIZE_HALF) {
-      removeInsertColumnIndicator(block);
-      return;
-    }
-    updateInsertColumnIndicator(this.editor, block);
-  }
-
   private handleMouseMove = (editor: NextEditor, event: Event) => {
     //
     if (editor.readonly) {
@@ -73,12 +58,10 @@ class TableMouseEventHandler {
     }
     //
     if (editor.selectionHandler.isSelecting() && !this.draggingRefCell) {
-      removeAllInsertColumnIndicators(this.editor);
       return;
     }
     //
     if (this.draggingRefCell) {
-      removeAllInsertColumnIndicators(this.editor);
       return;
     }
     //
@@ -95,15 +78,14 @@ class TableMouseEventHandler {
     const ev = event as MouseEvent;
     const block = tableBlockFromPoint(editor, ev);
     if (!block) {
-      removeAllIndicators(editor);
+      removeAllResizeGripper(editor);
       return;
     }
     //
     this.updateGripper(block, ev.x, ev.y);
-    this.updateFirstColumnInsertIndicator(block, ev.x, ev.y);
   };
 }
 
-export function handleTableMouseEvent(editor: NextEditor) {
+export function handleTableResizeMouseEvent(editor: NextEditor) {
   editor.addCustom('table-mouse-event-handler', (editor) => new TableMouseEventHandler(editor));
 }
