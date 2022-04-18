@@ -1,4 +1,6 @@
 import { assert, BlockElement, createElement, getBlockContent, getBlockTools, getLogger, getParentBlock, NextEditor, patchNode } from '@nexteditorjs/nexteditor-core';
+import { insertColumn } from '../../commands/insert-column';
+import { insertRow } from '../../commands/insert-row';
 import { getBlockTable, isTableBlock } from '../table-dom';
 import { TableGrid } from '../table-grid';
 import { createInsertColumnButton } from '../ui/insert-column-button';
@@ -12,8 +14,8 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
 
   const createInsertRowColumnButton = (parent: HTMLElement, type: 'row' | 'col', index: number) => {
     const buttonRoot = createElement('div', ['button-root', type], parent);
-    const buttonContainer = createElement('div', ['button-container', 'zoom', type], buttonRoot);
-    buttonContainer.setAttribute(`data-${type}-index`, `${index}`);
+    const buttonContainer = createElement('div', ['button-container', type], buttonRoot);
+    buttonRoot.setAttribute(`data-${type}-index`, `${index}`);
     createElement('span', ['insert-indicator'], buttonContainer);
     createInsertColumnButton(buttonContainer);
   };
@@ -113,14 +115,45 @@ function handleTableScroll(editor: NextEditor, event: Event) {
   editor.selection.caret.update();
 }
 
+function handleBorderBarClicked(editor: NextEditor, event: Event) {
+  //
+  const target = event.target;
+  if (!(target instanceof Element)) {
+    return;
+  }
+  //
+  const tableBlock = getParentBlock(target);
+  assert(logger, tableBlock && isTableBlock(tableBlock), 'invalid table block');
+  //
+  const insertButton = target.closest('.button-root');
+  if (insertButton) {
+    if (insertButton.classList.contains('col')) {
+      //
+      const index = parseInt(insertButton.getAttribute('data-col-index') || '0', 10);
+      insertColumn(editor, tableBlock, index);
+      updateCells(editor, tableBlock);
+      //
+    } else if (insertButton.classList.contains('row')) {
+      //
+      const index = parseInt(insertButton.getAttribute('data-row-index') || '0', 10);
+      insertRow(editor, tableBlock, index);
+      updateCells(editor, tableBlock);
+      //
+    }
+  }
+  //
+}
+
 function createTableBorderBar(editor: NextEditor, tableBlock: BlockElement) {
   assert(logger, isTableBlock(tableBlock), 'invalid table block');
   const tools = getBlockTools(tableBlock);
-  createElement('div', ['table-border-bar-container', 'top'], tools);
-  createElement('div', ['table-border-bar-container', 'left'], tools);
+  const top = createElement('div', ['table-border-bar-container', 'top'], tools);
+  const left = createElement('div', ['table-border-bar-container', 'left'], tools);
   updateCells(editor, tableBlock);
   //
   editor.domEvents.addEventListener(getBlockContent(tableBlock), 'scroll', handleTableScroll);
+  editor.domEvents.addEventListener(top, 'click', handleBorderBarClicked);
+  editor.domEvents.addEventListener(left, 'click', handleBorderBarClicked);
   //
 }
 
@@ -139,6 +172,7 @@ export function hideTableBorderBar(editor: NextEditor, tableBlock: BlockElement)
   const tools = getBlockTools(tableBlock);
   const tableBorderBars = tools.querySelectorAll('.table-border-bar-container');
   tableBorderBars.forEach((elem) => {
+    editor.domEvents.removeEventListener(elem, 'click', handleBorderBarClicked);
     elem.remove();
   });
   editor.domEvents.removeEventListener(getBlockContent(tableBlock), 'scroll', handleTableScroll);
