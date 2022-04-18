@@ -12,7 +12,7 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
   const table = getBlockTable(tableBlock);
   const tools = getBlockTools(tableBlock);
 
-  const createInsertRowColumnButton = (parent: HTMLElement, type: 'row' | 'col', index: number) => {
+  const createInsertRowColumnButton = (parent: HTMLElement, type: 'left' | 'top', index: number) => {
     const buttonRoot = createElement('div', ['button-root', type], parent);
     const buttonContainer = createElement('div', ['button-container', type], buttonRoot);
     buttonRoot.setAttribute(`data-${type}-index`, `${index}`);
@@ -37,7 +37,7 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
     createElement('span', ['table-border-bar-cell', 'corner'], bar);
     //
     if (x === 0) {
-      createInsertRowColumnButton(bar, 'col', 0);
+      createInsertRowColumnButton(bar, 'top', 0);
     }
     //
     const grid = TableGrid.fromTable(table);
@@ -67,9 +67,10 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
       //
       //
       const cell = createElement('span', ['table-border-bar-cell', 'top'], bar);
+      cell.setAttribute('data-col-index', `${colIndex}`);
       cell.style.width = `${right - left}px`;
       if (addButton) {
-        createInsertRowColumnButton(bar, 'col', colIndex + 1);
+        createInsertRowColumnButton(bar, 'top', colIndex + 1);
       }
     }
 
@@ -84,15 +85,16 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
     const newContainer = createElement('div', ['table-border-bar-container', 'left'], null);
     const bar = createElement('div', ['table-border-bar', 'left'], newContainer);
     //
-    createInsertRowColumnButton(bar, 'row', 0);
+    createInsertRowColumnButton(bar, 'left', 0);
     //
     Array.from(table.rows).forEach((row, rowIndex, arr) => {
       const rect = row.getBoundingClientRect();
       const cell = createElement('span', ['table-border-bar-cell', 'left'], bar);
+      cell.setAttribute('data-row-index', `${rowIndex}`);
       const height = rowIndex === arr.length - 1 ? rect.height + 2 : rect.height;
       cell.style.height = `${height}px`;
       //
-      createInsertRowColumnButton(bar, 'row', rowIndex + 1);
+      createInsertRowColumnButton(bar, 'left', rowIndex + 1);
     });
     //
     patchNode(left, newContainer);
@@ -127,21 +129,35 @@ function handleBorderBarClicked(editor: NextEditor, event: Event) {
   //
   const insertButton = target.closest('.button-root');
   if (insertButton) {
-    if (insertButton.classList.contains('col')) {
+    if (insertButton.classList.contains('top')) {
       //
-      const index = parseInt(insertButton.getAttribute('data-col-index') || '0', 10);
+      const index = parseInt(insertButton.getAttribute('data-top-index') || '0', 10);
       insertColumn(editor, tableBlock, index);
       updateCells(editor, tableBlock);
       //
-    } else if (insertButton.classList.contains('row')) {
+    } else if (insertButton.classList.contains('left')) {
       //
-      const index = parseInt(insertButton.getAttribute('data-row-index') || '0', 10);
+      const index = parseInt(insertButton.getAttribute('data-left-index') || '0', 10);
       insertRow(editor, tableBlock, index);
       updateCells(editor, tableBlock);
       //
     }
+    return;
   }
   //
+  const cell = target.closest('.table-border-bar-cell');
+  if (cell) {
+    //
+    if (cell.classList.contains('top')) {
+      //
+      //
+      //
+    } else if (cell.classList.contains('left')) {
+      //
+      //
+    }
+    //
+  }
 }
 
 function createTableBorderBar(editor: NextEditor, tableBlock: BlockElement) {

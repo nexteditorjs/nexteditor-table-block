@@ -75,7 +75,7 @@ div[data-type=editor-block].table-block {
         .button-root {
           position: relative;
 
-          &.col {
+          &.top {
             max-width: 0;
             width: 0;
             overflow: visible;
@@ -85,7 +85,7 @@ div[data-type=editor-block].table-block {
             }
           }
 
-          &.row {
+          &.left {
             max-height: 0;
             height: 0;
             overflow: visible;
@@ -104,12 +104,12 @@ div[data-type=editor-block].table-block {
             justify-content: center;
             z-index: 1;
 
-            &.col {
+            &.top {
               right: -14px;
               top: -10px;
             }
 
-            &.row {
+            &.left {
               transform: rotate(270deg);
               left: -10px;
               bottom: -14px;
