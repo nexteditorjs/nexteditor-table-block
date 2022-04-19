@@ -9,12 +9,12 @@ class TableBlockBorderHandler {
 
   constructor(private editor: NextEditor) {
     this.editor.addListener('blockDeleted', this.handleBlockDeleted);
-    this.editor.addListener('focusBlockChanged', this.handleFocusBlockChanged);
+    this.editor.addListener('selectionChanged', this.handleSelectionChanged);
   }
 
   destroy() {
     this.editor.removeListener('blockDeleted', this.handleBlockDeleted);
-    this.editor.removeListener('focusBlockChanged', this.handleFocusBlockChanged);
+    this.editor.removeListener('selectionChanged', this.handleSelectionChanged);
   }
 
   handleBlockDeleted = (editor: NextEditor, block: BlockElement) => {
@@ -27,21 +27,30 @@ class TableBlockBorderHandler {
     }
   };
 
-  handleFocusBlockChanged = (editor: NextEditor, newBlock: BlockElement | null) => {
-    if (!newBlock) {
-      this.hide();
-      return;
-    }
-    const activeTableBlock = getParentTableBlock(newBlock);
-    if (activeTableBlock) {
-      if (this.activeTableBar) {
-        if (this.activeTableBar.tableBlock !== activeTableBlock) {
-          this.hide();
-        }
-      }
-      this.show(activeTableBlock);
+  handleSelectionChanged = (editor: NextEditor) => {
+    const range = editor.selection.range;
+    let activeTableBlock: BlockElement | null = null;
+    if (range.isCollapsed()) {
+      const block = editor.getBlockById(range.start.blockId);
+      activeTableBlock = getParentTableBlock(block);
     } else {
-      this.hide();
+      //
+      const startBlock = editor.getBlockById(range.start.blockId);
+      const startActiveTableBlock = getParentTableBlock(startBlock);
+      //
+      const endBlock = editor.getBlockById(range.end.blockId);
+      const endActiveTableBlock = getParentTableBlock(endBlock);
+      if (startActiveTableBlock === endActiveTableBlock) {
+        activeTableBlock = startActiveTableBlock;
+      }
+    }
+    if (this.activeTableBar?.tableBlock !== activeTableBlock) {
+      if (this.activeTableBar) {
+        this.hide();
+      }
+    }
+    if (activeTableBlock) {
+      this.show(activeTableBlock);
     }
   };
 

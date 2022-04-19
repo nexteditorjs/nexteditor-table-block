@@ -11,6 +11,7 @@ import { createBlockContent } from './create-content';
 import { DocTableBlockData } from './doc-table-data';
 import { getEditorSelectedContainers, getTableSelectedContainers } from './get-selected-containers';
 import { selectionToDoc } from './selection-to-doc';
+import { adjustSelectionPos } from './table-actions/adjust-selection-pos';
 import { getClientRects } from './table-client-rects';
 import { getTableChildContainers, getContainerCell, getTableNextContainer } from './table-container';
 import { getChildContainerInCell, getBlockTable, getTableCells } from './table-dom';
@@ -94,12 +95,12 @@ function clearSelection(editor: NextEditor): void {
   });
 }
 
-function getChildContainers(tableBlock: BlockElement): ContainerElement[] {
+function getChildContainers(editor: NextEditor, tableBlock: BlockElement): ContainerElement[] {
   return getTableChildContainers(tableBlock);
 }
 
 // eslint-disable-next-line max-len
-function getNextContainer(tableBlock: BlockElement, childContainer: ContainerElement, type: MoveDirection, options?: NextContainerOptions): ContainerElement | null {
+function getNextContainer(editor: NextEditor, tableBlock: BlockElement, childContainer: ContainerElement, type: MoveDirection, options?: NextContainerOptions): ContainerElement | null {
   //
   return getTableNextContainer(tableBlock, childContainer, type, options);
 }
@@ -150,8 +151,6 @@ function convertFrom(editor: NextEditor, srcBlock: BlockElement): ConvertBlockRe
   };
 }
 
-// TODO: add selection to block
-
 const TableBlock: ComplexKindBlock = {
   blockType: 'table',
   blockKind: 'complex',
@@ -168,7 +167,7 @@ const TableBlock: ComplexKindBlock = {
   getMinWidth,
   getSelectedContainers: getTableSelectedContainers,
   convertFrom,
-  // handleDeleteBlock,
+  adjustSelectionPos,
   getClientRects,
   selectionToDoc,
 };

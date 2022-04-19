@@ -11,7 +11,6 @@ const logger = getLogger('create-content');
 //
 function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlockData) {
   const grid = new DocTableGrid(tableData);
-
   //
   const rows = tableData.rows;
   const cols = tableData.cols;
@@ -20,7 +19,14 @@ function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlo
   assert(logger, cols >= 1, `invalid cols: ${cols}`);
   assert(logger, tableData.children, 'no table children');
   const table = createElement('table', [], null);
+  //
+  const colGroup = createElement('colgroup', [], table);
+  for (let i = 0; i < grid.colCount; i++) {
+    createElement('col', [], colGroup);
+  }
+  //
   const tableBody = createElement('tbody', [], table);
+  //
   //
   let containerIndex = 0;
   for (let row = 0; row < rows; row++) {

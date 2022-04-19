@@ -188,6 +188,12 @@ div[data-type=editor-block].table-block {
       border-collapse: collapse;
       width: max-content;
       border-spacing: 0;
+
+      colgroup {
+        col {
+          min-width: 40px;
+        }
+      }
     }
 
     >table,

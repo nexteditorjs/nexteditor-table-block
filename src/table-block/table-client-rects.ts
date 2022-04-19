@@ -7,7 +7,7 @@ export function getClientRects(editor: NextEditor, block: BlockElement, range: S
     return [getBlockTable(block).getBoundingClientRect()];
   }
 
-  const containers = getTableSelectedContainers(block, range.start as ComplexBlockPosition, range.end as ComplexBlockPosition);
+  const containers = getTableSelectedContainers(editor, block, range.start as ComplexBlockPosition, range.end as ComplexBlockPosition);
   let left = Number.MAX_SAFE_INTEGER;
   let top = Number.MAX_SAFE_INTEGER;
   let right = Number.MIN_SAFE_INTEGER;
