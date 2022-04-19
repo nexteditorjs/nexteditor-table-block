@@ -1,8 +1,6 @@
-import { assert, BlockElement, ComplexBlockPosition, createComplexBlockPosition, getLogger, NextEditor } from '@nexteditorjs/nexteditor-core';
+import { BlockElement, ComplexBlockPosition, createComplexBlockPosition, NextEditor } from '@nexteditorjs/nexteditor-core';
 import { DocTableCellIndex } from '../doc-table-grid';
 import { TableGrid } from '../table-grid';
-
-const logger = getLogger('adjust-selection-pos');
 
 interface CellRect {
   top: number;
@@ -98,7 +96,6 @@ function expandTopLeft(cells: string[][], from: DocTableCellIndex, to: DocTableC
     }
   } while (changed);
   //
-  console.debug('expandTopLeft', rect);
   return rect;
 }
 
@@ -112,17 +109,8 @@ export function adjustSelectionPos(editor: NextEditor, tableBlock: BlockElement,
   }
   //
   const grid = TableGrid.fromBlock(tableBlock);
-  const cells: string[][] = [];
-  for (let row = 0; row < grid.rowCount; row++) {
-    const rowData: string[] = [];
-    for (let col = 0; col < grid.colCount; col++) {
-      rowData.push(grid.getCell({ row, col }).containerId);
-    }
-    cells.push(rowData);
-  }
+  const cells = grid.map((cell) => cell.containerId);
   //
-  //
-
   const startCell = grid.getCellByContainerId(start.childContainerId);
   const endCell = grid.getCellByContainerId(end.childContainerId);
   //

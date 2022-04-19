@@ -4,6 +4,7 @@ import { insertRow } from '../../commands/insert-row';
 import { getBlockTable, isTableBlock } from '../table-dom';
 import { TableGrid } from '../table-grid';
 import { createInsertColumnButton } from '../ui/insert-column-button';
+import { getColumnWidth } from './column-width';
 
 const logger = getLogger('table-border-bar-dom');
 
@@ -171,6 +172,7 @@ function createTableBorderBar(editor: NextEditor, tableBlock: BlockElement) {
   editor.domEvents.addEventListener(top, 'click', handleBorderBarClicked);
   editor.domEvents.addEventListener(left, 'click', handleBorderBarClicked);
   //
+  getColumnWidth(editor, tableBlock);
 }
 
 export function updateTableBorderBar(editor: NextEditor, tableBlock: BlockElement) {

@@ -276,6 +276,19 @@ export class TableGrid {
     return ret;
   }
 
+  map<T>(fn: (cell: TableCell) => T): T[][] {
+    const ret = [];
+    for (let row = 0; row < this.rowCount; row++) {
+      const rowData: T[] = [];
+      for (let col = 0; col < this.colCount; col++) {
+        const cell = this.getCell({ row, col });
+        rowData.push(fn(cell));
+      }
+      ret.push(rowData);
+    }
+    return ret;
+  }
+
   getBottomCell(cellData: TableCell): TableCell | null {
     const rowCount = this.rowCount;
     let nextCellData = cellData;
