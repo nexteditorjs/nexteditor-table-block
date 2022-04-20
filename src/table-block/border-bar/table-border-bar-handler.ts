@@ -1,5 +1,5 @@
-import { assert, BlockElement, getLogger, isChildNode, NextEditor } from '@nexteditorjs/nexteditor-core';
-import { getParentTableBlock } from '../table-dom';
+import { assert, BlockElement, getLogger, getParentBlock, getParentContainer, isChildNode, NextEditor } from '@nexteditorjs/nexteditor-core';
+import { getParentTableBlock, isTableBlock } from '../table-dom';
 import { TableBorderBar } from './table-border-bar';
 
 const logger = getLogger('table-border-bar');
@@ -30,9 +30,17 @@ class TableBlockBorderHandler {
   handleSelectionChanged = (editor: NextEditor) => {
     const range = editor.selection.range;
     let activeTableBlock: BlockElement | null = null;
-    if (range.isCollapsed()) {
+    if (range.isCollapsed() && range.isSimple()) {
       const block = editor.getBlockById(range.start.blockId);
-      activeTableBlock = getParentTableBlock(block);
+      if (isTableBlock(block)) {
+        const parent = getParentContainer(block);
+        const parentBlock = getParentBlock(parent);
+        if (parentBlock) {
+          activeTableBlock = getParentTableBlock(parentBlock);
+        }
+      } else {
+        activeTableBlock = getParentTableBlock(block);
+      }
     } else {
       //
       const startBlock = editor.getBlockById(range.start.blockId);

@@ -110,6 +110,7 @@
           "_xEOQ4kk2",
           "_jpVfg_XC"
         ],
+        "widths": [100, 100, 100, 100, 100, 100],
         "rows": 4,
         "cols": 6
       },
@@ -271,6 +272,7 @@
         "id": "_drMwClo9",
         "type": "table",
         "children": ["_rOwWKfLL", "_KnEvhBAq", "_4upAHeYd", "_q_QS9j7W", "_59Jhpg00", "_GX6qDBWc", "_S2G9_tEb", "_5FHQ8s1d", "_YAFcDtOp"],
+        "widths": [100, 100, 100],
         "rows": 3,
         "cols": 3
       }

@@ -1,5 +1,5 @@
 import {
-  NextEditor, assert, createElement, addClass, ContainerElement, BlockElement, DocBlock, BlockContentElement, createBlockContentElement, setContainerWidth, BlockPath, getContainerId, getLogger,
+  NextEditor, assert, createElement, addClass, ContainerElement, BlockElement, DocBlock, BlockContentElement, createBlockContentElement, BlockPath, getContainerId, getLogger,
 } from '@nexteditorjs/nexteditor-core';
 import { DocTableGrid } from './doc-table-grid';
 import { DocTableBlockData } from './doc-table-data';
@@ -20,9 +20,12 @@ function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlo
   assert(logger, tableData.children, 'no table children');
   const table = createElement('table', [], null);
   //
+  const widths = tableData.widths;
+  //
   const colGroup = createElement('colgroup', [], table);
   for (let i = 0; i < grid.colCount; i++) {
-    createElement('col', [], colGroup);
+    const col = createElement('col', [], colGroup);
+    col.style.width = `${widths[i]}px`;
   }
   //
   const tableBody = createElement('tbody', [], table);
@@ -44,12 +47,7 @@ function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlo
           cellElem.rowSpan = cell.rowSpan;
         }
         //
-        const container = editor.createChildContainer(path, cellElem, subContainerId);
-        const width = tableData[`${subContainerId}/width`];
-        if (width && typeof width === 'number') {
-          setContainerWidth(container, width);
-        }
-        //
+        editor.createChildContainer(path, cellElem, subContainerId);
         containerIndex += 1;
       } else {
         assert(logger, cell.colSpan > 1 || cell.rowSpan > 1, 'virtual cell should have colSpan or rowSpan');

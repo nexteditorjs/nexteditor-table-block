@@ -3,6 +3,7 @@ import {
 } from '@nexteditorjs/nexteditor-core';
 import { DocTableBlockData } from './doc-table-data';
 import { DocTableGrid } from './doc-table-grid';
+import { getTableColumnWidths } from './table-dom';
 
 const logger = getLogger('table-data');
 
@@ -41,12 +42,15 @@ export function table2Data(table: HTMLTableElement): DocTableBlockData {
     .map((cell) => cell.colSpan)
     .reduce((colSpan1, colSpan2) => colSpan1 + colSpan2, 0);
   //
+  const widths = getTableColumnWidths(table);
+  //
   const tableData: DocTableBlockData = {
     id: getBlockId(block),
     type: getBlockType(block),
     rows,
     cols,
     children: cellIds,
+    widths,
     ...spanData,
   };
   return tableData;

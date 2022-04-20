@@ -4,6 +4,8 @@ import {
   genId, getBlockType, getChildBlocks, getLogger, mergeDocs,
   NextEditor, SelectedBlock,
 } from '@nexteditorjs/nexteditor-core';
+import { DocTableBlockData } from './doc-table-data';
+import { getBlockTable, getTableColumnWidths } from './table-dom';
 import { TableGrid } from './table-grid';
 
 const logger = getLogger('table-selection-to-doc');
@@ -76,12 +78,15 @@ export function selectionToDoc(editor: NextEditor, selectedBlock: SelectedBlock)
     }
   }
   //
+  const widths = getTableColumnWidths(getBlockTable(block)).slice(startCol, endCol + 1);
+  //
   const id = genId();
   const type = blockType;
-  const newBlock = {
+  const newBlock: DocTableBlockData = {
     id,
     type,
     children,
+    widths,
     rows: endRow - startRow + 1,
     cols: endCol - startCol + 1,
     ...cellData,

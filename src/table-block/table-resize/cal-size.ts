@@ -1,65 +1,52 @@
-import { BlockElement, getContainerMinWidth, getContainerWidth, getParentContainer, NextEditor } from '@nexteditorjs/nexteditor-core';
-import { getChildContainerInCell } from '../table-dom';
-import { TableCell } from '../table-grid';
-import { getEffectedCells, CONTAINER_CELL_DELTA, GRIPPER_SIZE_HALF } from './resize-gripper';
-
-export function calCellNewSize(editor: NextEditor, block: BlockElement, table: HTMLTableElement, cellData: TableCell, x: number) {
-  const cell = cellData.cell;
-  const cellRect = cell.getBoundingClientRect();
-  let newWidth = x - cellRect.left + GRIPPER_SIZE_HALF - CONTAINER_CELL_DELTA;
-  const container = getChildContainerInCell(cell);
-  const minWidth = getContainerMinWidth(editor, container);
-  if (minWidth) {
-    // console.log('container min width', minWidth, newWidth);
-    // minWidth += getTableCellPadding(this.table);
-    // console.log('min-width', minWidth, newWidth);
-    if (newWidth < minWidth) {
-      newWidth = minWidth;
-    }
-  }
-  //
-  // console.log('new width', newWidth);
-  //
-  const parentContainer = getParentContainer(block);
-  const parentContainerWidth = getContainerWidth(parentContainer, { withPadding: false });
-  if (parentContainerWidth) {
-    // console.log('parent width', parentContainerWidth);
-    // check width
-    const currentWidth = container.getBoundingClientRect().width;
-    const currentTableWidth = table.getBoundingClientRect().width;
-    const newTableWidth = currentTableWidth + (newWidth - currentWidth);
-    if (newTableWidth > parentContainerWidth) {
-      newWidth = currentWidth;
-    }
-  }
-  return Math.round(newWidth);
-}
+import { getContainerMinWidth, NextEditor } from '@nexteditorjs/nexteditor-core';
+import { MIN_COLUMN_WIDTH } from '../doc-table-data';
+import { DocTableCellData } from '../doc-table-grid';
+import { getChildContainerInCell, getTableColumnWidths } from '../table-dom';
+import { TableGrid } from '../table-grid';
+import { CONTAINER_CELL_DELTA, GRIPPER_SIZE_HALF } from './resize-gripper';
 
 export function getTableResizeMinX(editor: NextEditor, draggingRefCell: HTMLTableCellElement, table: HTMLTableElement, x: number) {
   //
   const cell = draggingRefCell;
+  const grid = TableGrid.fromTable(table);
+  const cellData = grid.getCellByCellElement(cell);
+  const colIndex = cellData.col + cellData.colSpan - 1;
+  const widths = getTableColumnWidths(table);
   //
   let minX = x;
   //
-  const cells = getEffectedCells(table, cell);
-  cells.forEach((cellData) => {
+  const getRightWidth = (cellData: DocTableCellData, colIndex: number) => {
+    const from = colIndex + 1;
+    const to = cellData.col + cellData.colSpan;
+    const width = widths.slice(from, to).reduce((a, b) => a + b, 0);
+    return width;
+  };
+  //
+  const cells = new Set<HTMLTableCellElement>();
+  //
+  for (let row = 0; row < grid.rowCount; row++) {
+    const cellData = grid.getCell({ row, col: colIndex });
+    if (cells.has(cellData.cell)) {
+      continue;
+    }
+    cells.add(cellData.cell);
     //
     const cell = cellData.cell;
     const cellRect = cell.getBoundingClientRect();
     let newWidth = x - cellRect.left + GRIPPER_SIZE_HALF - CONTAINER_CELL_DELTA;
     const container = getChildContainerInCell(cell);
-    const minWidth = getContainerMinWidth(editor, container);
+    const totalWidth = getContainerMinWidth(editor, container) || (MIN_COLUMN_WIDTH * cellData.colSpan);
+    const rightWidth = getRightWidth(cellData, colIndex);
+    const minWidth = totalWidth - rightWidth;
     // console.debug(`container min-width: ${minWidth}`);
-    if (minWidth) {
-      if (newWidth < minWidth) {
-        newWidth = minWidth;
-      }
+    if (newWidth < minWidth) {
+      newWidth = minWidth;
     }
     //
     const newX = cellRect.left + newWidth;
     minX = Math.max(minX, newX);
     //
-  });
+  }
   //
   return minX;
 }

@@ -1,10 +1,12 @@
 import {
   assert, BlockElement, NextEditor,
-  DragDrop, DragDropOptions, setContainerWidth, getLogger,
+  DragDrop, DragDropOptions, getLogger,
 } from '@nexteditorjs/nexteditor-core';
-import { calCellNewSize, getTableResizeMinX } from './cal-size';
+import { getTableColumnWidths, setColumnWidth } from '../table-dom';
+import { TableGrid } from '../table-grid';
+import { getTableResizeMinX } from './cal-size';
 import {
-  changeContainerSize, getEffectedCells, removeAllResizeGripper, updateResizeGripper,
+  removeAllResizeGripper, setTableColumnWidths, updateResizeGripper,
 } from './resize-gripper';
 
 const logger = getLogger('table-resize-drag-drop');
@@ -26,38 +28,29 @@ export class TableResizeDragDrop implements DragDropOptions<TableResizeDragDropD
 
   // eslint-disable-next-line max-len
   onDragging(drag: DragDrop<TableResizeDragDropData>, event: MouseEvent, elem: HTMLElement, deltaX: number, deltaY: number): void {
-    const draggingRefCell = drag.data.draggingRefCell;
-    const x = getTableResizeMinX(this.editor, draggingRefCell, drag.data.table, event.x - drag.dragOffsetX);
+    const { table, block, draggingRefCell } = drag.data;
+    const x = getTableResizeMinX(this.editor, draggingRefCell, table, event.x - drag.dragOffsetX);
+    const totalWidth = x - table.getBoundingClientRect().left;
     //
     assert(logger, draggingRefCell, 'no dragging cell');
+    const grid = TableGrid.fromTable(table);
+    const cellData = grid.getCellByCellElement(draggingRefCell);
+    const colIndex = cellData.col + cellData.colSpan - 1;
     //
-    const cells = getEffectedCells(drag.data.table, draggingRefCell);
-    cells.forEach((cellData) => {
-      const newWidth = calCellNewSize(this.editor, drag.data.block, drag.data.table, cellData, x);
-      setContainerWidth(cellData.container, newWidth);
-    });
+    const widths = getTableColumnWidths(table);
+    const leftWidths = widths.slice(0, colIndex).reduce((a, b) => a + b, 0);
+    const colWidth = totalWidth - leftWidths;
+    setColumnWidth(table, colIndex, colWidth);
     //
-    this.editor.emit('blockNotify', this.editor, drag.data.block, 'resize', []);
+    this.editor.emit('blockNotify', this.editor, block, 'resize', []);
     //
-    updateResizeGripper(this.editor, drag.data.block, draggingRefCell);
-    //
+    updateResizeGripper(this.editor, block, draggingRefCell);
     this.editor.selection.caret.update();
   }
 
   onDragEnd(drag: DragDrop<TableResizeDragDropData>, event: MouseEvent, elem: HTMLElement, deltaX: number, deltaY: number): void {
-    const draggingRefCell = drag.data.draggingRefCell;
-    const sizes = new Map<string, number>();
-    const x = getTableResizeMinX(this.editor, drag.data.draggingRefCell, drag.data.table, event.x - drag.dragOffsetX);
-    const cells = getEffectedCells(drag.data.table, draggingRefCell);
-    cells.forEach((cellData) => {
-      const newWidth = calCellNewSize(this.editor, drag.data.block, drag.data.table, cellData, x);
-      if (newWidth) {
-        sizes.set(cellData.containerId, newWidth);
-      }
-    });
-    if (sizes.size > 0) {
-      changeContainerSize(this.editor, drag.data.block, sizes);
-    }
+    const widths = getTableColumnWidths(drag.data.table);
+    setTableColumnWidths(this.editor, drag.data.block, widths);
     //
     removeAllResizeGripper(this.editor);
     //

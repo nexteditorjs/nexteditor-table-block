@@ -1,7 +1,7 @@
 import { assert, BlockElement, createElement, getBlockContent, getBlockTools, getLogger, getParentBlock, NextEditor, patchNode } from '@nexteditorjs/nexteditor-core';
 import { insertColumn } from '../../commands/insert-column';
 import { insertRow } from '../../commands/insert-row';
-import { getBlockTable, isTableBlock } from '../table-dom';
+import { getBlockTable, getTableColumnWidths, isTableBlock } from '../table-dom';
 import { TableGrid } from '../table-grid';
 import { createInsertColumnButton } from '../ui/insert-column-button';
 import { getColumnWidth } from './column-width';
@@ -31,6 +31,8 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
     const newContainer = createElement('div', ['table-border-bar-container', 'top'], null);
     const bar = createElement('div', ['table-border-bar', 'top'], newContainer);
     //
+    const widths = getTableColumnWidths(table);
+    //
     const tableWidth = Math.min(blockContent.getBoundingClientRect().width, table.getBoundingClientRect().width);
     //
     let x = -scrollLeft;
@@ -44,9 +46,7 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
     const grid = TableGrid.fromTable(table);
     const cols = grid.colCount;
     for (let colIndex = 0; colIndex < cols; colIndex++) {
-      const cellData = grid.getCell({ col: colIndex, row: 0 });
-      const rect = cellData.cell.getBoundingClientRect();
-      const cellWidth = colIndex === cols - 1 ? rect.width + 2 : rect.width;
+      const cellWidth = widths[colIndex];
       //
       let left = x;
       let right = x + cellWidth;

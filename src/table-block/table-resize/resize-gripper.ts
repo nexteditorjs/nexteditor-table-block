@@ -3,7 +3,6 @@ import {
   DocBlock, getLogger,
 } from '@nexteditorjs/nexteditor-core';
 import { getBlockTable } from '../table-dom';
-import { TableCell, TableGrid } from '../table-grid';
 
 const logger = getLogger('table-resize-gripper');
 
@@ -28,16 +27,6 @@ export function getCellFromRightBorder(table: HTMLTableElement, x: number, y: nu
     }
   }
   return null;
-}
-
-function getCellsToColumn(table: HTMLTableElement, colIndex: number): TableCell[] {
-  assert(logger, colIndex >= 0, `invalid column index: ${colIndex}`);
-  const grid = TableGrid.fromTable(table);
-  const cells = grid.getColumnRealCells(colIndex).filter((cell) => {
-    const accept = cell.col + cell.colSpan === colIndex + 1;
-    return accept;
-  });
-  return cells;
 }
 
 export function editorHasExistsResizeGripper(editor: NextEditor) {
@@ -80,26 +69,17 @@ export function updateResizeGripper(editor: NextEditor, block: BlockElement, cel
   gripper.style.width = `${GRIPPER_SIZE}px`;
 }
 
-export function getEffectedCells(table: HTMLTableElement, cell: HTMLTableCellElement) {
-  //
-  const grid = TableGrid.fromTable(table);
-  const cellData = grid.getCellByCellElement(cell);
-  const cells = getCellsToColumn(table, cellData.col + cellData.colSpan - 1);
-  return cells;
-}
-
 export function removeAllResizeGripper(editor: NextEditor) {
   editor.rootContainer.querySelectorAll('.table-resize-gripper').forEach((gripper) => {
     gripper.remove();
   });
 }
 
-export function changeContainerSize(editor: NextEditor, block: BlockElement, sizes: Map<string, number>) {
-  const sizeEntries = Array.from(sizes.entries()).map(([containerId, width]) => [`${containerId}/width`, width]);
+export function setTableColumnWidths(editor: NextEditor, block: BlockElement, widths: number[]) {
   const oldData = editor.getBlockData(block);
   const newData: DocBlock = {
     ...oldData,
-    ...Object.fromEntries(sizeEntries),
+    widths,
   };
   //
   //

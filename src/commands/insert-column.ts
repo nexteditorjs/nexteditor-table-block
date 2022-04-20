@@ -1,5 +1,5 @@
 import { assert, BlockElement, createEmptyContainer, getLogger, NextEditor } from '@nexteditorjs/nexteditor-core';
-import { DocTableBlockData } from '../table-block/doc-table-data';
+import { DEFAULT_COLUMN_WIDTH, DocTableBlockData } from '../table-block/doc-table-data';
 import { getBlockTable } from '../table-block/table-dom';
 import { TableGrid } from '../table-block/table-grid';
 import { splitColCells } from './split-cell';
@@ -31,11 +31,15 @@ export function insertColumn(editor: NextEditor, tableBlock: BlockElement, inser
     colContainerIds.splice(insertIndex, 0, newContainerId);
   }
   //
+  const widths = oldBlockData.widths.concat();
+  widths.splice(insertIndex, 0, DEFAULT_COLUMN_WIDTH);
+  //
   const newChildren = TableGrid.virtualCellContainersGridToChildren(virtualCells);
   const newBlockData = {
     ...oldBlockData,
     cols: oldBlockData.cols + 1,
     children: newChildren,
+    widths,
   };
   //
   editor.updateBlockData(tableBlock, newBlockData);

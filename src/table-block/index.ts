@@ -8,7 +8,7 @@ import {
   getLogger,
 } from '@nexteditorjs/nexteditor-core';
 import { createBlockContent } from './create-content';
-import { DocTableBlockData } from './doc-table-data';
+import { DEFAULT_COLUMN_WIDTH, DocTableBlockData } from './doc-table-data';
 import { getEditorSelectedContainers, getTableSelectedContainers } from './get-selected-containers';
 import { selectionToDoc } from './selection-to-doc';
 import { adjustSelectionPos } from './table-actions/adjust-selection-pos';
@@ -133,6 +133,7 @@ function convertFrom(editor: NextEditor, srcBlock: BlockElement): ConvertBlockRe
     });
     //
   }
+  const widths = Array(cols).fill(DEFAULT_COLUMN_WIDTH);
   //
   const focusContainerId = children[cols];
   const focusBlockId = editor.doc.getContainerBlocks(focusContainerId)[0].id;
@@ -144,6 +145,7 @@ function convertFrom(editor: NextEditor, srcBlock: BlockElement): ConvertBlockRe
     rows,
     cols,
     children,
+    widths,
   };
   return {
     blockData,

@@ -4,4 +4,8 @@ export interface DocTableBlockData extends DocBlock {
   rows: number;
   cols: number;
   children: string[];
+  widths: number[];
 }
+
+export const DEFAULT_COLUMN_WIDTH = 100;
+export const MIN_COLUMN_WIDTH = 40;

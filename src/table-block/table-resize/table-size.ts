@@ -1,6 +1,8 @@
-import { BlockElement, NextEditor, getContainerMinWidth, getContainerWidth } from '@nexteditorjs/nexteditor-core';
+import { BlockElement, NextEditor, getContainerMinWidth, getContainerWidth, getLogger } from '@nexteditorjs/nexteditor-core';
 import { getBlockTable } from '../table-dom';
 import { TableCell, TableGrid } from '../table-grid';
+
+const logger = getLogger('table-size');
 
 const TABLE_CELL_MIN_WIDTH = 40;
 const TABLE_COLUMN_MIN_WIDTH = TABLE_CELL_MIN_WIDTH; // add table border size
