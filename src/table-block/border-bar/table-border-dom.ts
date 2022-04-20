@@ -46,7 +46,7 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
     const grid = TableGrid.fromTable(table);
     const cols = grid.colCount;
     for (let colIndex = 0; colIndex < cols; colIndex++) {
-      const cellWidth = widths[colIndex];
+      const cellWidth = colIndex === cols - 1 ? widths[colIndex] + 2 : widths[colIndex];
       //
       let left = x;
       let right = x + cellWidth;

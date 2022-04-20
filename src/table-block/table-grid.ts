@@ -325,16 +325,7 @@ export class TableGrid {
   }
 
   getVirtualCellContainersGrid(): string[][] {
-    const rows: string[][] = [];
-    for (let row = 0; row < this.rowCount; row++) {
-      const rowContainerIds = [];
-      for (let col = 0; col < this.colCount; col++) {
-        const cell = this.getCell({ row, col });
-        rowContainerIds.push(cell.containerId);
-      }
-      rows.push(rowContainerIds);
-    }
-    return rows;
+    return this.map((cell) => cell.containerId);
   }
 
   static virtualCellContainersGridToChildren(virtualCellContainersGrid: string[][]): string[] {
