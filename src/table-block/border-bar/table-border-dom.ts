@@ -1,6 +1,8 @@
 import { assert, BlockElement, createElement, getBlockContent, getBlockTools, getLogger, getParentBlock, NextEditor, patchNode } from '@nexteditorjs/nexteditor-core';
 import { insertColumn } from '../../commands/insert-column';
 import { insertRow } from '../../commands/insert-row';
+import { selectColumns } from '../../commands/select-column';
+import { selectRows } from '../../commands/select-rows';
 import { getBlockTable, getTableColumnWidths, isTableBlock } from '../table-dom';
 import { TableGrid } from '../table-grid';
 import { createInsertColumnButton } from '../ui/insert-column-button';
@@ -68,7 +70,7 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
       //
       //
       const cell = createElement('span', ['table-border-bar-cell', 'top'], bar);
-      cell.setAttribute('data-col-index', `${colIndex}`);
+      cell.setAttribute('data-top-index', `${colIndex}`);
       cell.style.width = `${right - left}px`;
       if (addButton) {
         createInsertRowColumnButton(bar, 'top', colIndex + 1);
@@ -91,7 +93,7 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
     Array.from(table.rows).forEach((row, rowIndex, arr) => {
       const rect = row.getBoundingClientRect();
       const cell = createElement('span', ['table-border-bar-cell', 'left'], bar);
-      cell.setAttribute('data-row-index', `${rowIndex}`);
+      cell.setAttribute('data-left-index', `${rowIndex}`);
       const height = rowIndex === arr.length - 1 ? rect.height + 2 : rect.height;
       cell.style.height = `${height}px`;
       //
@@ -151,13 +153,15 @@ function handleBorderBarClicked(editor: NextEditor, event: Event) {
     //
     if (cell.classList.contains('top')) {
       //
-      //
+      const index = parseInt(cell.getAttribute('data-top-index') || '0', 10);
+      selectColumns(editor, tableBlock, index);
       //
     } else if (cell.classList.contains('left')) {
       //
+      const index = parseInt(cell.getAttribute('data-left-index') || '0', 10);
+      selectRows(editor, tableBlock, index);
       //
     }
-    //
   }
 }
 

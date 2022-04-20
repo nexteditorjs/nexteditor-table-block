@@ -214,7 +214,6 @@ export class TableGrid {
 
   getSpannedRange(startIndex: DocTableCellIndex, endIndex: DocTableCellIndex): DocTableCellIndex [] {
     //
-    //
     const fromRow = Math.min(startIndex.row, endIndex.row);
     const toRow = Math.max(startIndex.row, endIndex.row);
     const fromCol = Math.min(startIndex.col, endIndex.col);
@@ -244,6 +243,19 @@ export class TableGrid {
 
   getAllCells() {
     return this.getCells({ col: 0, row: 0 }, { col: this.colCount - 1, row: this.rowCount - 1 });
+  }
+
+  sub(from: DocTableCellIndex, to: DocTableCellIndex): DocTableCellData[][] {
+    const ret: DocTableCellData[][] = [];
+    for (let row = from.row; row <= to.row; row++) {
+      const rowData = [];
+      for (let col = from.col; col <= to.col; col++) {
+        const cell = this.getCell({ row, col });
+        rowData.push(cell);
+      }
+      ret.push(rowData);
+    }
+    return ret;
   }
 
   getAllContainers() {

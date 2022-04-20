@@ -9,3 +9,8 @@ export interface DocTableBlockData extends DocBlock {
 
 export const DEFAULT_COLUMN_WIDTH = 100;
 export const MIN_COLUMN_WIDTH = 40;
+
+export type SelectTableCustom = {
+  colIndex?: number;
+  rowIndex?: number;
+};
