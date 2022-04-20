@@ -1,26 +1,15 @@
 import {
-  assert, blockToDoc, cloneChildContainer, createComplexBlockPosition,
-  createEmptyContainer,
+  assert, cloneChildContainer, createComplexBlockPosition,
   createEmptyDoc,
-  DocBlock, DocBlockAttributes, DocObject,
-  genId, getBlockType, getChildBlocks, getLogger, mergeDocs,
-  NextEditor, SelectedBlock,
+  DocBlock, DocObject,
+  genId, getBlockType, getLogger, NextEditor, SelectedBlock,
 } from '@nexteditorjs/nexteditor-core';
-import { DocTableBlockData, SelectTableCustom } from './doc-table-data';
+import { DocTableBlockData } from './doc-table-data';
+import { getTableSelectionRange } from './selection-range';
 import { getBlockTable, getTableColumnWidths } from './table-dom';
 import { TableGrid } from './table-grid';
 
 const logger = getLogger('table-selection-to-doc');
-
-function pickContainerData(blockData: DocBlock, containerId: string) {
-  const ret: DocBlockAttributes = {};
-  Object.entries(blockData).forEach(([key, value]) => {
-    if (key.startsWith(`${containerId}/`)) {
-      ret[key] = value;
-    }
-  });
-  return ret;
-}
 
 export function selectionToDoc(editor: NextEditor, selectedBlock: SelectedBlock): DocObject {
   //
@@ -42,23 +31,7 @@ export function selectionToDoc(editor: NextEditor, selectedBlock: SelectedBlock)
   assert(logger, !start.isSimple() && !end.isSimple(), 'invalid block pos type');
   //
   const grid = TableGrid.fromBlock(block);
-  //
-  const from = start;
-  const to = end;
-  const fromCell = grid.getCellByContainerId(from.childContainerId);
-  const toCell = grid.getCellByContainerId(to.childContainerId);
-
-  const fromCustom = from.custom as SelectTableCustom;
-  const toCustom = to.custom as SelectTableCustom;
-  //
-  const fromRowTemp = fromCustom?.rowIndex ?? fromCell.row;
-  const fromColTemp = fromCustom?.colIndex ?? fromCell.col;
-  const toRowTemp = toCustom?.rowIndex ?? (toCell.row + toCell.rowSpan - 1);
-  const toColTemp = toCustom?.colIndex ?? (toCell.col + toCell.colSpan - 1);
-  const fromRow = Math.min(fromRowTemp, toRowTemp);
-  const toRow = Math.max(fromRowTemp, toRowTemp);
-  const fromCol = Math.min(fromColTemp, toColTemp);
-  const toCol = Math.max(fromColTemp, toColTemp);
+  const { fromCol, toCol, fromRow, toRow } = getTableSelectionRange(block, start, end);
   //
   const spanData: { [key: string]: number } = {};
   const children: string[] = [];
@@ -128,45 +101,6 @@ export function selectionToDoc(editor: NextEditor, selectedBlock: SelectedBlock)
     });
   });
   //
-
-  // //
-  // const startCell = grid.getCellByContainerId(start.childContainerId);
-  // const endCell = grid.getCellByContainerId(end.childContainerId);
-  // //
-  // const children: string[] = [];
-  // let cellData: DocBlockAttributes = {};
-  // //
-  // const oldDoc = editor.doc.toJSON();
-  // let childContainers: { [index: string]: DocBlock[] } = {};
-  // //
-  // const startRow = startCell.row;
-  // const startCol = startCell.col;
-  // const endRow = endCell.row + endCell.rowSpan - 1;
-  // const endCol = endCell.col + endCell.colSpan - 1;
-  // for (let row = startRow; row <= endRow; row++) {
-  //   for (let col = startCol; col <= endCol; col++) {
-  //     //
-  //     const cell = grid.getCell({ row, col });
-  //     if (cell.virtual) {
-  //       continue;
-  //     }
-  //     //
-  //     children.push(cell.containerId);
-  //     cellData = {
-  //       ...cellData,
-  //       ...pickContainerData(blockData, cell.containerId),
-  //     };
-  //     //
-  //     const childDocs = getChildBlocks(editor.getContainerById(cell.containerId)).map((block) => blockToDoc(editor, block));
-  //     const childDoc = mergeDocs(childDocs);
-  //     const { root, ...cellChildContainers } = childDoc.blocks;
-  //     childContainers = {
-  //       ...childContainers,
-  //       ...cellChildContainers,
-  //       [cell.containerId]: oldDoc.blocks[cell.containerId],
-  //     };
-  //   }
-  // }
   //
   const widths = getTableColumnWidths(getBlockTable(block)).slice(fromCol, toCol + 1);
   //

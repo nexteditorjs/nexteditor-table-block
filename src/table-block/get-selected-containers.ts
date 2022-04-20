@@ -1,5 +1,5 @@
 import { NextEditor, ComplexBlockPosition, ContainerElement, assert, BlockElement, getLogger, getBlockId } from '@nexteditorjs/nexteditor-core';
-import { SelectTableCustom } from './doc-table-data';
+import { getTableSelectionRange } from './selection-range';
 import { TableGrid } from './table-grid';
 
 const logger = getLogger('get-selected-containers');
@@ -20,18 +20,7 @@ export function getTableSelectedContainers(editor: NextEditor, block: BlockEleme
     return containers;
   }
   //
-  assert(logger, from.custom && to.custom, 'invalid from and to, no custom');
-  const fromCustom = from.custom as SelectTableCustom;
-  const toCustom = to.custom as SelectTableCustom;
-  //
-  const fromRowTemp = fromCustom.rowIndex ?? fromCell.row;
-  const fromColTemp = fromCustom.colIndex ?? fromCell.col;
-  const toRowTemp = toCustom.rowIndex ?? (toCell.row + toCell.rowSpan - 1);
-  const toColTemp = toCustom.colIndex ?? (toCell.col + toCell.colSpan - 1);
-  const fromRow = Math.min(fromRowTemp, toRowTemp);
-  const toRow = Math.max(fromRowTemp, toRowTemp);
-  const fromCol = Math.min(fromColTemp, toColTemp);
-  const toCol = Math.max(fromColTemp, toColTemp);
+  const { fromCol, toCol, fromRow, toRow } = getTableSelectionRange(block, from, to);
   //
   const containersSet = new Set<string>();
   const selectedCells: ContainerElement[] = [];

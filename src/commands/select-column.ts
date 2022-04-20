@@ -13,8 +13,8 @@ export function selectColumns(editor: NextEditor, tableBlock: BlockElement, from
   const topLeft = grid.getCell({ row: 0, col: from });
   const bottomRight = grid.getCell({ row: grid.rowCount - 1, col: from + count - 1 });
   //
-  const start = createComplexBlockPosition(tableBlock, topLeft.containerId, { colIndex: from });
-  const end = createComplexBlockPosition(tableBlock, bottomRight.containerId, { colIndex: from + count - 1 });
+  const start = createComplexBlockPosition(tableBlock, topLeft.containerId, { colIndex: from, rowIndex: 0 });
+  const end = createComplexBlockPosition(tableBlock, bottomRight.containerId, { colIndex: from + count - 1, rowIndex: grid.rowCount - 1 });
   //
   editor.selection.setSelection(start, end);
 }
