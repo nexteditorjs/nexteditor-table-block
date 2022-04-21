@@ -84,12 +84,19 @@ export function createBlockContent(editor: NextEditor, path: BlockPath, containe
   const tableData = blockData as DocTableBlockData;
   //
   const content = createBlockContentElement(blockElement, 'div');
-  const table = createTable(editor, path, tableData);
-  content.appendChild(table);
-  //
-  handleTableResizeMouseEvent(editor);
-  handlePasteInTableEvent(editor);
-  handleTableBorderBar(editor);
+  try {
+    const table = createTable(editor, path, tableData);
+    content.appendChild(table);
+    //
+    handleTableResizeMouseEvent(editor);
+    handlePasteInTableEvent(editor);
+    handleTableBorderBar(editor);
+  } catch (err) {
+    const message = `invalid table data: ${JSON.stringify(tableData)}`;
+    logger.error(message);
+    const error = createElement('div', ['error'], content);
+    error.innerText = message;
+  }
   //
   return content;
 }
