@@ -1,7 +1,6 @@
 import {
   assert, isContainer, isChildContainer, ContainerElement, getParentBlock, getContainerId, getBlockId, getBlockType, getLogger,
 } from '@nexteditorjs/nexteditor-core';
-import { getTableColumnWidths } from './border-bar/column-width';
 import { DocTableBlockData } from './doc-table-data';
 import { DocTableGrid } from './doc-table-grid';
 
@@ -15,7 +14,7 @@ function getCellChildContainer(cell: HTMLTableCellElement) {
   return container as ContainerElement;
 }
 
-export function table2Data(table: HTMLTableElement): DocTableBlockData {
+function table2Data(table: HTMLTableElement): DocTableBlockData {
   const block = getParentBlock(table);
   assert(logger, block, 'no parent block for table');
   //
@@ -25,7 +24,7 @@ export function table2Data(table: HTMLTableElement): DocTableBlockData {
   } = {};
 
   Array.from(table.rows).forEach((row: HTMLTableRowElement) => {
-    Array.from(row.cells).forEach((cell: HTMLTableCellElement, col) => {
+    Array.from(row.cells).forEach((cell: HTMLTableCellElement) => {
       //
       const container = getCellChildContainer(cell);
       const containerId = getContainerId(container);
@@ -42,15 +41,13 @@ export function table2Data(table: HTMLTableElement): DocTableBlockData {
     .map((cell) => cell.colSpan)
     .reduce((colSpan1, colSpan2) => colSpan1 + colSpan2, 0);
   //
-  const widths = getTableColumnWidths(table);
-  //
   const tableData: DocTableBlockData = {
     id: getBlockId(block),
     type: getBlockType(block),
     rows,
     cols,
     children: cellIds,
-    widths,
+    widths: Array(cols).fill(100),
     ...spanData,
   };
   return tableData;

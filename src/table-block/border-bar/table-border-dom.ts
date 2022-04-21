@@ -6,7 +6,7 @@ import { selectRows } from '../../commands/select-rows';
 import { getBlockTable, isTableBlock } from '../table-dom';
 import { TableGrid } from '../table-grid';
 import { createInsertColumnButton } from '../ui/insert-column-button';
-import { getTableColumnWidths } from './column-width';
+import { getTableColumnWidthsFromDom } from './column-width';
 import { getTableRowHeights } from './row-height';
 
 const logger = getLogger('table-border-bar-dom');
@@ -34,7 +34,7 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
     const newContainer = createElement('div', ['table-border-bar-container', 'top'], null);
     const bar = createElement('div', ['table-border-bar', 'top'], newContainer);
     //
-    const widths = getTableColumnWidths(table);
+    const widths = getTableColumnWidthsFromDom(table);
     //
     const tableWidth = Math.min(blockContent.getBoundingClientRect().width, table.getBoundingClientRect().width);
     //
@@ -64,7 +64,7 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
       }
       //
       let addButton = true;
-      if (right > tableWidth) {
+      if (right - tableWidth > 2.0) {
         right = tableWidth;
         addButton = false;
       }
@@ -198,4 +198,14 @@ export function hideTableBorderBar(editor: NextEditor, tableBlock: BlockElement)
     elem.remove();
   });
   editor.domEvents.removeEventListener(getBlockContent(tableBlock), 'scroll', handleTableScroll);
+}
+
+export function getTopBorderHeight(tableBlock: BlockElement) {
+  assert(logger, isTableBlock(tableBlock), 'invalid table block');
+  const tools = getBlockTools(tableBlock);
+  const topTableBorderBar = tools.querySelector('.table-border-bar-container.top');
+  if (topTableBorderBar) {
+    return topTableBorderBar.getBoundingClientRect().height;
+  }
+  return 0;
 }
