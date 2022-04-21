@@ -93,10 +93,10 @@ export function deleteRows(range: SelectionRange) {
     replacedContainerData.set(containerId, { newContainerId, rowSpan: newSpanned });
     //
   });
-  //
-  for (let i = 0; i < cells.length; i++) {
+  // replace replaced container id
+  for (let i = startRow; i < cells.length; i++) {
     const row = cells[i];
-    for (let j = startRow; j < row.length; j++) {
+    for (let j = 0; j < row.length; j++) {
       const containerId = row[j];
       const newContainer = replacedContainerData.get(containerId);
       if (newContainer) {
