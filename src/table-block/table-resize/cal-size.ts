@@ -1,7 +1,8 @@
 import { getContainerMinWidth, NextEditor } from '@nexteditorjs/nexteditor-core';
+import { getTableColumnWidths } from '../border-bar/column-width';
 import { MIN_COLUMN_WIDTH } from '../doc-table-data';
 import { DocTableCellData } from '../doc-table-grid';
-import { getChildContainerInCell, getTableColumnWidths } from '../table-dom';
+import { getChildContainerInCell } from '../table-dom';
 import { TableGrid } from '../table-grid';
 import { CONTAINER_CELL_DELTA, GRIPPER_SIZE_HALF } from './resize-gripper';
 

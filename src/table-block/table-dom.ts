@@ -61,21 +61,11 @@ export function getParentTableBlock(block: BlockElement): BlockElement | null {
   return getParentTableBlock(parentBlock);
 }
 
-function getTableCol(table: HTMLTableElement, colIndex: number) {
+export function getTableCol(table: HTMLTableElement, colIndex: number) {
   const colGroup = table.querySelector('colgroup');
   assert(logger, colGroup, 'no colgroup');
   const col = colGroup.children[colIndex];
   assert(logger, col, 'no col');
   assert(logger, col instanceof HTMLTableColElement, `invalid col: ${col.tagName}`);
   return col;
-}
-
-export function setColumnWidth(table: HTMLTableElement, colIndex: number, width: number) {
-  getTableCol(table, colIndex).style.width = `${width}px`;
-}
-
-export function getTableColumnWidths(table: HTMLTableElement) {
-  const tableCols = Array.from((table.querySelector('colgroup') as HTMLElement).children) as HTMLTableColElement[];
-  const widths = tableCols.map((col) => col.getBoundingClientRect().width);
-  return widths;
 }

@@ -1,9 +1,9 @@
 import {
   assert, isContainer, isChildContainer, ContainerElement, getParentBlock, getContainerId, getBlockId, getBlockType, getLogger,
 } from '@nexteditorjs/nexteditor-core';
+import { getTableColumnWidths } from './border-bar/column-width';
 import { DocTableBlockData } from './doc-table-data';
 import { DocTableGrid } from './doc-table-grid';
-import { getTableColumnWidths } from './table-dom';
 
 const logger = getLogger('table-data');
 

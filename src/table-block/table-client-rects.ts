@@ -1,25 +1,26 @@
 import { NextEditor, BlockElement, SelectionRange, ComplexBlockPosition } from '@nexteditorjs/nexteditor-core';
-import { getTableSelectedContainers } from './get-selected-containers';
+import { getTableColumnWidths } from './border-bar/column-width';
+import { getTableRowHeights } from './border-bar/row-height';
+import { getTableSelectionRange } from './selection-range';
 import { getBlockTable } from './table-dom';
 
 export function getClientRects(editor: NextEditor, block: BlockElement, range: SelectionRange): DOMRect[] {
   if (range.isSimple()) {
     return [getBlockTable(block).getBoundingClientRect()];
   }
+  //
+  const table = getBlockTable(block);
+  const tableRect = table.getBoundingClientRect();
+  //
+  const { fromCol, fromRow, toCol, toRow } = getTableSelectionRange(block, range.start as ComplexBlockPosition, range.end as ComplexBlockPosition);
+  //
+  const widths = getTableColumnWidths(table);
+  const left = widths.slice(0, fromCol).reduce((a, b) => a + b, 0);
+  const right = left + widths.slice(fromCol, toCol + 1).reduce((a, b) => a + b, 0);
+  //
+  const heights = getTableRowHeights(table);
+  const top = heights.slice(0, fromRow).reduce((a, b) => a + b, 0);
+  const bottom = top + heights.slice(fromRow, toRow + 1).reduce((a, b) => a + b, 0);
 
-  const containers = getTableSelectedContainers(editor, block, range.start as ComplexBlockPosition, range.end as ComplexBlockPosition);
-  let left = Number.MAX_SAFE_INTEGER;
-  let top = Number.MAX_SAFE_INTEGER;
-  let right = Number.MIN_SAFE_INTEGER;
-  let bottom = Number.MIN_SAFE_INTEGER;
-  //
-  containers.forEach((container) => {
-    const rect = container.getBoundingClientRect();
-    left = Math.min(left, rect.left);
-    top = Math.min(top, rect.top);
-    right = Math.max(right, rect.right);
-    bottom = Math.max(bottom, rect.bottom);
-  });
-  //
-  return [new DOMRect(left, top, right - left, bottom - top)];
+  return [new DOMRect(tableRect.left + left, tableRect.top + top, right - left, bottom - top)];
 }

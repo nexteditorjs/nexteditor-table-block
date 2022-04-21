@@ -184,6 +184,12 @@ div[data-type=editor-block].table-block {
     max-width: 100%;
     overflow-x: auto;
 
+    .error {
+      color: red;
+      border: 1px solid red;
+      padding: 8px;
+    }
+
     >table {
       border-collapse: collapse;
       width: max-content;

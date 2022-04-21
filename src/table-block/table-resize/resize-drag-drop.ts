@@ -2,7 +2,7 @@ import {
   assert, BlockElement, NextEditor,
   DragDrop, DragDropOptions, getLogger,
 } from '@nexteditorjs/nexteditor-core';
-import { getTableColumnWidths, setColumnWidth } from '../table-dom';
+import { getTableColumnWidths, setColumnWidth } from '../border-bar/column-width';
 import { TableGrid } from '../table-grid';
 import { getTableResizeMinX } from './cal-size';
 import {

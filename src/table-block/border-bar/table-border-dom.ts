@@ -3,10 +3,11 @@ import { insertColumn } from '../../commands/insert-column';
 import { insertRow } from '../../commands/insert-row';
 import { selectColumns } from '../../commands/select-column';
 import { selectRows } from '../../commands/select-rows';
-import { getBlockTable, getTableColumnWidths, isTableBlock } from '../table-dom';
+import { getBlockTable, isTableBlock } from '../table-dom';
 import { TableGrid } from '../table-grid';
 import { createInsertColumnButton } from '../ui/insert-column-button';
-import { getColumnWidth } from './column-width';
+import { getTableColumnWidths } from './column-width';
+import { getTableRowHeights } from './row-height';
 
 const logger = getLogger('table-border-bar-dom');
 
@@ -88,13 +89,14 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
     const newContainer = createElement('div', ['table-border-bar-container', 'left'], null);
     const bar = createElement('div', ['table-border-bar', 'left'], newContainer);
     //
+    const heights = getTableRowHeights(table);
+    //
     createInsertRowColumnButton(bar, 'left', 0);
     //
     Array.from(table.rows).forEach((row, rowIndex, arr) => {
-      const rect = row.getBoundingClientRect();
       const cell = createElement('span', ['table-border-bar-cell', 'left'], bar);
       cell.setAttribute('data-left-index', `${rowIndex}`);
-      const height = rowIndex === arr.length - 1 ? rect.height + 2 : rect.height;
+      const height = rowIndex === arr.length - 1 ? heights[rowIndex] + 2 : heights[rowIndex];
       cell.style.height = `${height}px`;
       //
       createInsertRowColumnButton(bar, 'left', rowIndex + 1);
@@ -175,8 +177,6 @@ function createTableBorderBar(editor: NextEditor, tableBlock: BlockElement) {
   editor.domEvents.addEventListener(getBlockContent(tableBlock), 'scroll', handleTableScroll);
   editor.domEvents.addEventListener(top, 'click', handleBorderBarClicked);
   editor.domEvents.addEventListener(left, 'click', handleBorderBarClicked);
-  //
-  getColumnWidth(editor, tableBlock);
 }
 
 export function updateTableBorderBar(editor: NextEditor, tableBlock: BlockElement) {

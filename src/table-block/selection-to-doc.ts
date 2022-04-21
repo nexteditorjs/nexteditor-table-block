@@ -4,9 +4,10 @@ import {
   DocBlock, DocObject,
   genId, getBlockType, getLogger, NextEditor, SelectedBlock,
 } from '@nexteditorjs/nexteditor-core';
+import { getTableColumnWidths } from './border-bar/column-width';
 import { DocTableBlockData } from './doc-table-data';
 import { getTableSelectionRange } from './selection-range';
-import { getBlockTable, getTableColumnWidths } from './table-dom';
+import { getBlockTable } from './table-dom';
 import { TableGrid } from './table-grid';
 
 const logger = getLogger('table-selection-to-doc');
