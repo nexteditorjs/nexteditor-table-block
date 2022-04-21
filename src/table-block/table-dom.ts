@@ -29,10 +29,16 @@ export function getTableContainers(table: HTMLTableElement): ContainerElement[] 
 }
 
 export function getTableKey(table: HTMLTableElement): string {
-  const containers = getTableContainers(table);
-  const ids = containers.map(getContainerId);
-  const keys = ids.join();
-  return md5(keys);
+  const cells = getTableCells(table);
+  const keys = cells.map((cell) => {
+    const container = getChildContainerInCell(cell);
+    const containerId = getContainerId(container);
+    const colSpan = cell.colSpan;
+    const rowSpan = cell.rowSpan;
+    return `${containerId}/${colSpan}/${rowSpan}`;
+  });
+  const key = keys.join();
+  return md5(key);
 }
 
 export function isTableBlock(block: BlockElement) {

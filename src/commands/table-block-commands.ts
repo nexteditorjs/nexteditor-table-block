@@ -5,16 +5,16 @@ import { BlockCommandItem, BlockElement,
   getBlockKind,
   getBlockType, NextEditor, NextEditorCommandProvider, SelectionRange,
 } from '@nexteditorjs/nexteditor-core';
+import { canDeleteColumns, deleteColumns } from './delete-column';
+import { canDeleteRows } from './delete-row';
 import { canMergeCells, mergeRangeCells } from './merge-cells';
 import { canSplitCell, splitRangeCells } from './split-cell';
 
 const TableCommands = [
   'table/merge-cells',
   'table/split-cell',
-  'table/insert-column-before',
-  'table/insert-column-after',
-  'table/insert-row-above',
-  'table/insert-row-below',
+  'table/insert-column',
+  'table/insert-row',
   'table/delete-rows',
   'table/delete-columns',
 ] as const;
@@ -49,6 +49,22 @@ export default class TableBlockCommandProvider implements NextEditorCommandProvi
       });
     }
     //
+    if (canDeleteColumns(editor, block, range)) {
+      commands.push({
+        id: 'table/delete-columns',
+        name: 'delete columns',
+        ...ext,
+      });
+    }
+    //
+    if (canDeleteRows(editor, block, range)) {
+      commands.push({
+        id: 'table/delete-rows',
+        name: 'delete rows',
+        ...ext,
+      });
+    }
+    //
     return commands;
   }
 
@@ -67,6 +83,11 @@ export default class TableBlockCommandProvider implements NextEditorCommandProvi
     //
     if (command === 'table/split-cell') {
       splitRangeCells(range);
+      return true;
+    }
+    //
+    if (command === 'table/delete-columns') {
+      deleteColumns(range);
       return true;
     }
     //

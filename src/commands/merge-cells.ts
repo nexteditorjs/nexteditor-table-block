@@ -85,3 +85,5 @@ export function mergeRangeCells(range: SelectionRange) {
   editor.updateBlockData(block, newBlockData, newRange);
   editor.deleteChildContainers(deletedContainers);
 }
+
+(window as any).mergeRangeCells = mergeRangeCells;
