@@ -70,6 +70,8 @@ export class DocTableGrid {
       this._rows.push(new DocTableRow(this.colCount));
     }
     this.fillGrid();
+    assert(logger, tableData.widths, 'no widths');
+    assert(logger, this.colCount === tableData.widths.length, 'invalid col count');
   }
 
   get rowCount() {
