@@ -1,6 +1,7 @@
 import { assert, BlockElement, createEmptyContainer, getLogger, NextEditor } from '@nexteditorjs/nexteditor-core';
 import cloneDeep from 'lodash.clonedeep';
 import { DocTableBlockData } from '../table-block/doc-table-data';
+import { tableData2Grid } from '../table-block/table-data';
 import { getBlockTable } from '../table-block/table-dom';
 import { TableGrid } from '../table-block/table-grid';
 
@@ -48,11 +49,14 @@ export function insertRow(editor: NextEditor, tableBlock: BlockElement, insertIn
   });
 
   const newChildren = TableGrid.virtualCellContainersGridToChildren(cells);
-  const newBlockData = {
+  const newBlockData: DocTableBlockData = {
     ...oldBlockData,
     rows: oldBlockData.rows + 1,
     children: newChildren,
   };
+  //
+  // verify
+  tableData2Grid(newBlockData);
   //
   editor.updateBlockData(tableBlock, newBlockData);
 }

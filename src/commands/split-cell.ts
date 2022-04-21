@@ -1,6 +1,8 @@
 import { assert, BlockElement, createBlockSimpleRange, createEmptyContainer, DocBlockAttributes, getBlockType, getLogger, NextEditor, SelectionRange } from '@nexteditorjs/nexteditor-core';
 import cloneDeep from 'lodash.clonedeep';
+import { DocTableBlockData } from '../table-block/doc-table-data';
 import { DocTableCellIndex } from '../table-block/doc-table-grid';
+import { tableData2Grid } from '../table-block/table-data';
 import { TableGrid } from '../table-block/table-grid';
 import { getRangeDetails } from './table-range';
 
@@ -29,11 +31,8 @@ export function splitCell(editor: NextEditor, block: BlockElement, index: DocTab
     }
   }
   //
-  const oldData = editor.getBlockData(block);
-  const newData = cloneDeep(oldData) as DocBlockAttributes;
-  //
-  delete newData.id;
-  delete newData.type;
+  const oldData = editor.getBlockData(block) as DocTableBlockData;
+  const newData = cloneDeep(oldData);
   //
   delete newData[`${cellData.containerId}/colSpan`];
   delete newData[`${cellData.containerId}/rowSpan`];
@@ -44,6 +43,11 @@ export function splitCell(editor: NextEditor, block: BlockElement, index: DocTab
   const focusedBlock = blocks[0];
   assert(logger, focusedBlock, 'no child block');
   const newRange = createBlockSimpleRange(editor, focusedBlock.id, 0);
+
+  //
+  // verify
+  tableData2Grid(newData);
+  //
   editor.updateBlockData(block, newData, newRange);
 }
 
@@ -75,6 +79,7 @@ export function canSplitCell(editor: NextEditor, block: BlockElement, range: Sel
   //
   return true;
 }
+
 export function splitRangeCells(range: SelectionRange) {
   //
   const { editor, block, startRow, startCol, endRow, endCol } = getRangeDetails(range);

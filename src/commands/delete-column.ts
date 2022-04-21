@@ -3,6 +3,7 @@ import cloneDeep from 'lodash.clonedeep';
 import { DocTableBlockData } from '../table-block/doc-table-data';
 import { deleteContainerData } from '../table-block/pick-container-data';
 import { getTableSelectionRange } from '../table-block/selection-range';
+import { tableData2Grid } from '../table-block/table-data';
 import { TableGrid } from '../table-block/table-grid';
 
 const logger = getLogger('delete-columns');
@@ -146,9 +147,10 @@ export function deleteColumns(range: SelectionRange) {
     cols: oldBlockData.cols - deleteCount,
     children,
   };
+  // verify
+  tableData2Grid(newBlockData);
+
   editor.updateBlockData(block, newBlockData, createBlockSimpleRange(editor, focusedBlock.id, 0));
   editor.deleteChildContainers(Array.from(deletedContainerIds));
   editor.deleteChildContainers(Array.from(replacedContainerData.keys()));
 }
-
-(window as any).deleteColumns = deleteColumns;

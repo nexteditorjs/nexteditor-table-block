@@ -1,8 +1,10 @@
 import {
-  assert, BlockElement, containerToDoc, createBlockSimpleRange, DocBlockAttributes, getBlockType, getChildBlockCount,
+  assert, BlockElement, containerToDoc, createBlockSimpleRange, getBlockType, getChildBlockCount,
   getContainerId, getLogger, NextEditor, SelectionRange,
 } from '@nexteditorjs/nexteditor-core';
 import cloneDeep from 'lodash.clonedeep';
+import { DocTableBlockData } from '../table-block/doc-table-data';
+import { tableData2Grid } from '../table-block/table-data';
 import { TableGrid } from '../table-block/table-grid';
 import { splitRangeCells } from './split-cell';
 import { getRangeDetails } from './table-range';
@@ -34,7 +36,7 @@ export function mergeRangeCells(range: SelectionRange) {
   //
   splitRangeCells(range);
   //
-  const blockData = cloneDeep(editor.getBlockData(block));
+  const blockData = cloneDeep(editor.getBlockData(block)) as DocTableBlockData;
   assert(logger, blockData.children, 'no table children');
   //
   const grid = TableGrid.fromTable(table);
@@ -75,13 +77,14 @@ export function mergeRangeCells(range: SelectionRange) {
     blockData.children.splice(containerIndex, 1);
   });
   //
-  const newBlockData = blockData as DocBlockAttributes;
-  delete newBlockData.id;
-  delete newBlockData.type;
+  const newBlockData = blockData;
   const blocks = editor.getChildContainerData(firstCellContainerId);
   const focusedBlock = blocks[0];
   assert(logger, focusedBlock, 'no child block');
   const newRange = createBlockSimpleRange(editor, focusedBlock.id, 0);
+  // verify
+  tableData2Grid(newBlockData);
+  //
   editor.updateBlockData(block, newBlockData, newRange);
   editor.deleteChildContainers(deletedContainers);
 }

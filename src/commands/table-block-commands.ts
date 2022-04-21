@@ -6,7 +6,7 @@ import { BlockCommandItem, BlockElement,
   getBlockType, NextEditor, NextEditorCommandProvider, SelectionRange,
 } from '@nexteditorjs/nexteditor-core';
 import { canDeleteColumns, deleteColumns } from './delete-column';
-import { canDeleteRows } from './delete-row';
+import { canDeleteRows, deleteRows } from './delete-row';
 import { canMergeCells, mergeRangeCells } from './merge-cells';
 import { canSplitCell, splitRangeCells } from './split-cell';
 
@@ -88,6 +88,11 @@ export default class TableBlockCommandProvider implements NextEditorCommandProvi
     //
     if (command === 'table/delete-columns') {
       deleteColumns(range);
+      return true;
+    }
+    //
+    if (command === 'table/delete-rows') {
+      deleteRows(range);
       return true;
     }
     //
