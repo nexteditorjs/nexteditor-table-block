@@ -1,8 +1,9 @@
-import { assert, BlockElement, createElement, getBlockContent, getBlockTools, getLogger, getParentBlock, NextEditor, patchNode } from '@nexteditorjs/nexteditor-core';
+import { assert, BlockElement, createElement, getBlockContent, getBlockId, getBlockTools, getLogger, getParentBlock, NextEditor, patchNode } from '@nexteditorjs/nexteditor-core';
 import { insertColumn } from '../../commands/insert-column';
 import { insertRow } from '../../commands/insert-row';
 import { selectColumns } from '../../commands/select-column';
 import { selectRows } from '../../commands/select-rows';
+import { getTableSelectionRange } from '../selection-range';
 import { getBlockTable, isTableBlock } from '../table-dom';
 import { TableGrid } from '../table-grid';
 import { createInsertColumnButton } from '../ui/insert-column-button';
@@ -23,6 +24,30 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
     createElement('span', ['insert-indicator'], buttonContainer);
     createInsertColumnButton(buttonContainer);
   };
+
+  //
+  const selectedRows = new Set<number>();
+  const selectedColumns = new Set<number>();
+  //
+  const range = editor.selection.range;
+  if (!range.isSimple()) {
+    if (range.start.blockId === getBlockId(tableBlock)) {
+      const grid = TableGrid.fromBlock(tableBlock);
+      const { start, end } = range;
+      assert(logger, !start.isSimple() && !end.isSimple(), 'invalid range');
+      const { fromCol, toCol, fromRow, toRow } = getTableSelectionRange(tableBlock, start, end);
+      if (fromRow === 0 && toRow === grid.rowCount - 1) {
+        for (let i = fromCol; i <= toCol; i++) {
+          selectedColumns.add(i);
+        }
+      }
+      if (fromCol === 0 && toCol === grid.colCount - 1) {
+        for (let i = fromRow; i <= toRow; i++) {
+          selectedRows.add(i);
+        }
+      }
+    }
+  }
 
   // top
   const blockContent = getBlockContent(tableBlock);
@@ -71,6 +96,9 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
       //
       //
       const cell = createElement('span', ['table-border-bar-cell', 'top'], bar);
+      if (selectedColumns.has(colIndex)) {
+        cell.classList.add('selected');
+      }
       cell.setAttribute('data-top-index', `${colIndex}`);
       cell.style.width = `${right - left}px`;
       if (addButton) {
@@ -95,6 +123,9 @@ function updateCells(editor: NextEditor, tableBlock: BlockElement) {
     //
     Array.from(table.rows).forEach((row, rowIndex, arr) => {
       const cell = createElement('span', ['table-border-bar-cell', 'left'], bar);
+      if (selectedRows.has(rowIndex)) {
+        cell.classList.add('selected');
+      }
       cell.setAttribute('data-left-index', `${rowIndex}`);
       const height = rowIndex === arr.length - 1 ? heights[rowIndex] + 2 : heights[rowIndex];
       cell.style.height = `${height}px`;

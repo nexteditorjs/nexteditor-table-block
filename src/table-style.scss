@@ -70,6 +70,10 @@ div[data-type=editor-block].table-block {
           &:hover {
             background-color: #ddd;
           }
+
+          &.selected {
+            background-color: var(--primary-color);
+          }
         }
 
         .button-root {
