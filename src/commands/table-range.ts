@@ -22,7 +22,8 @@ export function getRangeDetails(range: SelectionRange) {
   const endCell = grid.getCellByContainerId(end.childContainerId);
   //
   const { row: startRow, col: startCol } = startCell;
-  const { row: endRow, col: endCol } = endCell;
+  const endRow = endCell.row + endCell.rowSpan - 1;
+  const endCol = endCell.col + endCell.colSpan - 1;
 
   //
   return {

@@ -1,6 +1,6 @@
 import {
   assert, BlockElement, containerToDoc, createBlockSimpleRange, getBlockType, getChildBlockCount,
-  getContainerId, getLogger, NextEditor, SelectionRange,
+  getContainerId, getLogger, isEmptyContainer, NextEditor, SelectionRange,
 } from '@nexteditorjs/nexteditor-core';
 import cloneDeep from 'lodash.clonedeep';
 import { DocTableBlockData } from '../table-block/doc-table-data';
@@ -58,8 +58,10 @@ export function mergeRangeCells(range: SelectionRange) {
   lastCells.forEach((cellData) => {
     const container = grid.getCellByContainerId(cellData.containerId).container;
     const containerId = getContainerId(container);
-    const doc = containerToDoc(editor, containerId);
-    editor.insertDocAt(firstCellContainer, getChildBlockCount(firstCellContainer), doc);
+    if (!isEmptyContainer(editor, container)) {
+      const doc = containerToDoc(editor, containerId);
+      editor.insertDocAt(firstCellContainer, getChildBlockCount(firstCellContainer), doc);
+    }
     //
     deletedContainers.push(containerId);
   });
