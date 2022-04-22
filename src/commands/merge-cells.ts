@@ -22,8 +22,8 @@ export function canMergeCells(editor: NextEditor, block: BlockElement, range: Se
   //
   if (getBlockType(block) !== 'table') return false;
   //
-  const { startRow, startCol, endRow, endCol } = getRangeDetails(range);
-  if (startRow === endRow && startCol === endCol) return false;
+  const { startCell, endCell } = getRangeDetails(range);
+  if (startCell.cell === endCell.cell) return false;
   //
   return true;
 }

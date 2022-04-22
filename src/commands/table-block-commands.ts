@@ -17,6 +17,7 @@ const TableCommands = [
   'table/insert-row',
   'table/delete-rows',
   'table/delete-columns',
+  'table/delete',
 ] as const;
 
 export type TableCommand = typeof TableCommands[number];
@@ -49,20 +50,31 @@ export default class TableBlockCommandProvider implements NextEditorCommandProvi
       });
     }
     //
-    if (canDeleteColumns(editor, block, range)) {
+    const deleteColumns = canDeleteColumns(editor, block, range);
+    const deleteRows = canDeleteRows(editor, block, range);
+    if (deleteColumns && deleteRows) {
       commands.push({
-        id: 'table/delete-columns',
-        name: 'delete columns',
+        id: 'table/delete',
+        name: 'delete tables',
         ...ext,
       });
-    }
-    //
-    if (canDeleteRows(editor, block, range)) {
-      commands.push({
-        id: 'table/delete-rows',
-        name: 'delete rows',
-        ...ext,
-      });
+    } else {
+      //
+      if (canDeleteColumns(editor, block, range)) {
+        commands.push({
+          id: 'table/delete-columns',
+          name: 'delete columns',
+          ...ext,
+        });
+      }
+      //
+      if (canDeleteRows(editor, block, range)) {
+        commands.push({
+          id: 'table/delete-rows',
+          name: 'delete rows',
+          ...ext,
+        });
+      }
     }
     //
     return commands;
@@ -93,6 +105,11 @@ export default class TableBlockCommandProvider implements NextEditorCommandProvi
     //
     if (command === 'table/delete-rows') {
       deleteRows(range);
+      return true;
+    }
+    //
+    if (command === 'table/delete') {
+      editor.deleteBlock(block);
       return true;
     }
     //

@@ -71,8 +71,8 @@ export function canSplitCell(editor: NextEditor, block: BlockElement, range: Sel
   //
   if (getBlockType(block) !== 'table') return false;
   //
-  const { startCell, startRow, startCol, endRow, endCol } = getRangeDetails(range);
-  if (startRow !== endRow || startCol !== endCol) return false;
+  const { startCell, endCell } = getRangeDetails(range);
+  if (startCell.cell !== endCell.cell) return false;
   if (startCell.colSpan === 1 && startCell.rowSpan === 1) {
     return false;
   }
