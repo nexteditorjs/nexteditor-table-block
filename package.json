@@ -24,6 +24,7 @@
     "typescript": "^4.5.4",
     "prettier": "^2.5.1",
     "vite": "^2.8.0",
+    "sass": "*",
     "@nexteditorjs/nexteditor-input-handlers": "^0.0.35",
     "vite-plugin-css-injected-by-js": "^1.1.0"
   }
