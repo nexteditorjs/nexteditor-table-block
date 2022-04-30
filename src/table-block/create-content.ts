@@ -77,10 +77,9 @@ function createTable(editor: NextEditor, path: BlockPath, tableData: DocTableBlo
   return table;
 }
 
-export function createBlockContent(editor: NextEditor, path: BlockPath, container: ContainerElement, blockIndex: number, blockElement: BlockElement, blockData: DocBlock): BlockContentElement {
+export function createBlockContent(editor: NextEditor, path: BlockPath, container: ContainerElement, blockElement: BlockElement, blockData: DocBlock): BlockContentElement {
   assert(logger, blockData.type === 'table', 'not table data');
   assert(logger, getContainerId(container) === path[path.length - 1].containerId, 'invalid path');
-  assert(logger, blockIndex === path[path.length - 1].blockIndex, 'invalid path');
   const tableData = blockData as DocTableBlockData;
   //
   const content = createBlockContentElement(blockElement, 'div');
