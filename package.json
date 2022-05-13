@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/blueimp-md5": "^2.18.0",
     "@types/lodash.clonedeep": "^4.5.0",
-    "@types/node": "^12.0.0",
+    "@types/node": "*",
     "typescript": "^4.5.4",
     "prettier": "^2.5.1",
     "vite": "^2.8.0",
